@@ -37,7 +37,7 @@ El controlador se encarga de mediar entre la vista y el modelo.
 
 # Funciones de consulta sobre el catálogo
 
-def getVideosByLikes(catalog, n, countryname, tag):
+def getVideosByLikes(catalog, categoria, n):
     """
     Retorna los videos con más likes
     """

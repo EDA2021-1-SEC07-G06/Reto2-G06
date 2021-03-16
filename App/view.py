@@ -67,7 +67,7 @@ while True:
     elif int(inputs[0]) == 2:
         categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
-        mas_likes = controller.getVideosByLikes(catalog, categoria, n)
+        mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
         printLikesData(mas_likes)
     else:
         sys.exit(0)
