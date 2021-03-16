@@ -36,3 +36,10 @@ El controlador se encarga de mediar entre la vista y el modelo.
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+def getVideosByLikes(catalog, n, countryname, tag):
+    """
+    Retorna los videos con más likes
+    """
+    likes = model.getVideosByLikes(catalog, categoria, n)
+    return likes
