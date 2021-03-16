@@ -65,7 +65,7 @@ while True:
         print("Cargando información de los archivos ....")
 
     elif int(inputs[0]) == 2:
-        categoría = input("Ingrese la categoría a consultar: ")
+        categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
         mas_likes = controller.getVideosByLikes(catalog, categoria, n)
         printLikesData(mas_likes)
