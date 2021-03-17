@@ -38,7 +38,63 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
 
+    catalog =  { 'videos' : None, 'categoryId' : None, 'categoryName' : None,}
+    
+    catalog['videos'] =  lt.newList('ARRAY_LIST')
+    
+
+    catalog ['categoryId'] = mp.newMap(100,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0
+                                   )
+    catalog ['categoryName'] = mp.newMap(100,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0
+                                  )
+    
+def newCategory(id, name):
+    """
+    Crea una nueva estructura para modelar los videos de
+    una categoria, su nombre e id.
+    """
+    categorys = {'id': id, 'name': name.strip(), 'videos': None }
+    
+    categorys['videos'] = lt.newList('ARRAY_LIST')
+    return categorys
+    
+def addVideo(catalog, video):
+    
+    lt.addLast(catalog['videos'],video)
+    addVideoCategory(catalog, video['category_id'] , video)
+
+def addVideoCategory(catalog, idCategory, video):
+    categoryId = catalog['categoryId']
+    existCategory = mp.contains(categoryId, idCategory)
+    if existCategory:
+        entry = mp.get(categoryId, idCategory)
+        categoriaId = me.getValue(entry)
+
+    else:
+        categoria = newCategory(idCategory,'')
+        mp.put(categoryId, idCategory , categoria)
+        entry = mp.get(categoryId, idCategory)
+        categoriaId = me.getValue(entry)
+
+    lt.addLast(categoriaId['videos'], video)
+    
+
+def addCategory(catalog, category):
+
+    nuevaCategoria = newCategory(int(category['id']), category['name'])
+    mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
+    mp.put(catalog['categoryName'], int(category['name']), nuevaCategoria)
+    
+
+
+
+    
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
