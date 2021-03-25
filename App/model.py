@@ -40,9 +40,10 @@ los mismos.
 # Construccion de modelos
 def newCatalog():
 
-    catalog =  { 'videos' : None, 'categoryId' : None, 'categoryName' : None,}
+    catalog =  { 'videos' : None, 'categorys': None , 'categoryId' : None, 'categoryName' : None,}
     
     catalog['videos'] =  lt.newList('ARRAY_LIST')
+    catalog['categorys'] = lt.newList('ARRAY_LIST', cmpfunction = cmpByIdCategory)
     
 
     catalog ['categoryId'] = mp.newMap(100,
@@ -53,43 +54,64 @@ def newCatalog():
                                    maptype='CHAINING',
                                    loadfactor=4.0
                                   )
-    
+    return catalog
+
 def newCategory(id, name):
     """
     Crea una nueva estructura para modelar los videos de
     una categoria, su nombre e id.
     """
-    categorys = {'id': id, 'name': name.strip(), 'videos': None }
-    
+    categorys = {'id':'', 'name': '', 'videos': None }
+    categorys['id'] = int(id)
+    categorys['name'] = name.strip()
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
     
 def addVideo(catalog, video):
     
     lt.addLast(catalog['videos'],video)
-    addVideoCategory(catalog, video['category_id'] , video)
+    addVideoCategory(catalog, int(video['category_id']) , video)
+    addVideoIdCategory(catalog, int(video['category_id']) , video)
 
-def addVideoCategory(catalog, idCategory, video):
-    categoryId = catalog['categoryId']
-    existCategory = mp.contains(categoryId, idCategory)
-    if existCategory:
-        entry = mp.get(categoryId, idCategory)
-        categoriaId = me.getValue(entry)
-
-    else:
-        categoria = newCategory(idCategory,'')
-        mp.put(categoryId, idCategory , categoria)
-        entry = mp.get(categoryId, idCategory)
-        categoriaId = me.getValue(entry)
-
-    lt.addLast(categoriaId['videos'], video)
+def addVideoCategory(catalog, identificador, video):
     
+    categorys = catalog['categorys']
+    categoryTosearch = newCategory(identificador, '')
+    posCategory = lt.isPresent(categorys, categoryTosearch)
+    if posCategory > 0:
+        
+        categ = lt.getElement(categorys, posCategory)
+        nombre = categ['name']
+        categName  = catalog['categoryName']
+        existName = mp.contains(categName,nombre)
+        if existName:
+            entry = mp.get(categName,nombre)
+            valor = me.getValue(entry)
+            lt.addLast(valor['videos'],video)
+    else: 
+        categ = newCategory(identificador, 'desconocida')
+        lt.addLast(categorys, categ)
+    lt.addLast(categ['videos'], video)
+
+def addVideoIdCategory(catalog, identificador, video):
+    categId = catalog['categoryId']
+    existauthor = mp.contains(categId, identificador)
+    if existauthor:
+        entry = mp.get(categId, identificador)
+        valor = me.getValue(entry)
+        lt.addLast(valor['videos'],video)
+    else: 
+        nuevaCateg = newCategory(identificador, 'Sin nombre.')
+        lt.addLast(nuevaCateg['videos'],video)
+        mp.put(categId,identificador,nuevaCateg)
+
 
 def addCategory(catalog, category):
-
-    nuevaCategoria = newCategory(int(category['id']), category['name'])
+   
+    nuevaCategoria = newCategory(category['id'],category['name'])
+    lt.addLast(catalog['categorys'], nuevaCategoria)
     mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
-    mp.put(catalog['categoryName'], int(category['name']), nuevaCategoria)
+    mp.put(catalog['categoryName'], category['name'], nuevaCategoria)
     
 
 
@@ -160,5 +182,17 @@ def getInfoVideos(lista1, lista2, lista3):
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def cmpByIdCategory(cat1,cat2):
+
+    idCat1 = cat1['id'] 
+    idCat2 = cat2['id'] 
+    if idCat1 == idCat2:
+        return 0
+    elif idCat1 < idCat2:
+        return -1
+    else:
+        return 1
+
 
 # Funciones de ordenamiento
