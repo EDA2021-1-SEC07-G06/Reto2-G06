@@ -36,8 +36,12 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- Videos con más likes para una categoría")
+    print("1- Inicializar Catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Videos con más likes para una categoría")
+    print("4- Ordenar mejores videos de un año")
+    print("0- Salir")
+
 
 catalog = None
 
@@ -70,20 +74,35 @@ def printLikesData(videos):
 Menu principal
 """
 while True:
+    
+while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
     if int(inputs[0]) == 1:
+        print("Inicializando Catálogo ....")
+        cont = controller.initCatalog()
+
+    elif int(inputs[0]) == 2:
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
-        loadData(catalog)
+
         resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
         print(resultado)
 
-    elif int(inputs[0]) == 2:
+        answer = controller.loadData(cont)
+        print('Videos cargados: ' + str(controller.videosSize(cont)))
+        print('Autores cargados: ' + str(controller.authorsSize(cont)))
+        print('Categorias cargadas: ' + str(controller.categorySize(cont)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
+
+    elif int(inputs[0]) == 3:
         categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
         mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
         printLikesData(mas_likes)
+
     else:
         sys.exit(0)
 sys.exit(0)
