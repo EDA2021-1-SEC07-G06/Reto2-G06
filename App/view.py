@@ -49,7 +49,7 @@ def initCatalog():
     """
     Inicializa el catalogo de videos
     """
-    return controller.initCatalog()
+    return controller.initCatalog(metodo, factor)
 
 def loadData(catalog):
     """
@@ -72,17 +72,15 @@ def printLikesData(videos):
 
 """
 Menu principal
-"""
-while True:
-    
+""" 
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING")
-        factor = input("Ingrese el factor de carga")
+        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
+        factor = input("Ingrese el factor de carga: ")
         cont = controller.initCatalog(metodo, factor)
 
     elif int(inputs[0]) == 2:
