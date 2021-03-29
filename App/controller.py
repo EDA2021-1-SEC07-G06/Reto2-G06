@@ -96,6 +96,19 @@ def getVideosByLikes(catalog, categoria, n):
     return likes
 
 
+def videosSize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videosSize(catalog)
+
+
+def categorySize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.categorySize(catalog)
+
 #   Funciones para medir tiempo y memoria
 
 

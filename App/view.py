@@ -88,7 +88,6 @@ while True:
 
         answer = controller.loadData(cont)
         print('Videos cargados: ' + str(controller.videosSize(cont)))
-        print('Autores cargados: ' + str(controller.authorsSize(cont)))
         print('Categorias cargadas: ' + str(controller.categorySize(cont)))
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{answer[1]:.3f}")

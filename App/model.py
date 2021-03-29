@@ -187,6 +187,19 @@ def getInfoVideos(lista1, lista2, lista3):
 
 # Funciones de consulta
 
+def videosSize(catalog):
+    """
+    Número de videos en el catago
+    """
+    return lt.size(catalog['videos'])
+
+
+def categorySize(catalog):
+    """
+    Número de videos en el catago
+    """
+    return lt.size(catalog['categoryId'])
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpByIdCategory(cat1,cat2):
