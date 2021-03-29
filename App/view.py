@@ -80,14 +80,11 @@ while True:
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
         metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
-        factor = input("Ingrese el factor de carga: ")
+        factor = float(input("Ingrese el factor de carga: "))
         cont = controller.initCatalog(metodo, factor)
 
     elif int(inputs[0]) == 2:
-        print("Cargando información de los archivos ....")
-
-        resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
-        print(resultado)
+        print("Cargando información de los archivos ...")
 
         answer = controller.loadData(cont)
         print('Videos cargados: ' + str(controller.videosSize(cont)))

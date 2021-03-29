@@ -40,7 +40,9 @@ los mismos.
 # Construccion de modelos
 def newCatalog(metodo, factor):
 
-    catalog =  { 'videos' : None, 'categorys': None , 'categoryId' : None, 'categoryName' : None,}
+    catalog =  { 'videos' : None, 'categorys': None ,
+                 'categoryId' : None, 'categoryName' : None,
+                 'country_name' : None}
     
     catalog['videos'] =  lt.newList('ARRAY_LIST')
     catalog['categorys'] = lt.newList('ARRAY_LIST', cmpfunction = cmpByIdCategory)
@@ -51,6 +53,10 @@ def newCatalog(metodo, factor):
                                    loadfactor= factor
                                    )
     catalog ['categoryName'] = mp.newMap(100,
+                                   maptype= metodo,
+                                   loadfactor= factor
+                                  )
+    catalog ['country_name'] = mp.newMap(100,
                                    maptype= metodo,
                                    loadfactor= factor
                                   )
