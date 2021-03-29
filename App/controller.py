@@ -32,11 +32,11 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog():
+def initCatalog(metodo, factor):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog()
+    catalog = model.newCatalog(metodo, factor)
     return catalog
     
 # Funciones para la carga de datos
@@ -95,63 +95,6 @@ def getVideosByLikes(catalog, categoria, n):
     likes = model.getVideosByLikes(catalog, categoria, n)
     return likes
 
-
-def getVideosYear(catalog, year):
-    """
-    Retorna los videos que fueron publicados
-    en un año
-    """
-    videos = None
-    delta_time = -1.0
-    delta_memory = -1.0
-
-    tracemalloc.start()
-    start_time = getTime()
-    start_memory = getMemory()
-
-    videos = model.getVideosByYear(catalog, year)
-
-    stop_memory = getMemory()
-    stop_time = getTime()
-    tracemalloc.stop()
-
-    delta_time = stop_time - start_time
-    delta_memory = deltaMemory(start_memory, stop_memory)
-
-    return videos, delta_time, delta_memory
-
-
-def sortVideosByYear(catalog, year, fraction, rank):
-    """
-    Retorna los videos que fueron publicados
-    en un año ordenados por rating
-    """
-    # modificaciones para medir el tiempo y memoria
-    videos = None
-    delta_time = -1.0
-    delta_memory = -1.0
-
-    # inicializa el processo para medir memoria
-    tracemalloc.start()
-
-    # toma de tiempo y memoria al inicio del proceso
-    start_time = getTime()
-    start_memory = getMemory()
-
-    videos = model.sortVideosByYear(catalog, year, fraction, rank)
-
-    # toma de tiempo y memoria al final del proceso
-    stop_memory = getMemory()
-    stop_time = getTime()
-
-    # finaliza el procesos para medir memoria
-    tracemalloc.stop()
-
-    # calculando la diferencia de tiempo y memoria
-    delta_time = stop_time - start_time
-    delta_memory = deltaMemory(start_memory, stop_memory)
-
-    return videos, delta_time, delta_memory
 
 #   Funciones para medir tiempo y memoria
 

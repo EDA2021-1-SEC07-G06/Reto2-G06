@@ -38,7 +38,7 @@ los mismos.
 """
 
 # Construccion de modelos
-def newCatalog():
+def newCatalog(metodo, factor):
 
     catalog =  { 'videos' : None, 'categorys': None , 'categoryId' : None, 'categoryName' : None,}
     
@@ -47,12 +47,12 @@ def newCatalog():
     
 
     catalog ['categoryId'] = mp.newMap(100,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0
+                                   maptype= metodo,
+                                   loadfactor= factor
                                    )
     catalog ['categoryName'] = mp.newMap(100,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0
+                                   maptype= metodo,
+                                   loadfactor= factor
                                   )
     return catalog
 

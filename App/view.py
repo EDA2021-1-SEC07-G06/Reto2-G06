@@ -81,7 +81,9 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        cont = controller.initCatalog()
+        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING")
+        factor = input("Ingrese el factor de carga")
+        cont = controller.initCatalog(metodo, factor)
 
     elif int(inputs[0]) == 2:
         print("Cargando información de los archivos ....")
