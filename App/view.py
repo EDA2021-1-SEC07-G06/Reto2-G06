@@ -51,7 +51,7 @@ def loadData(catalog):
     """
     Carga los videos en la estructura de datos
     """
-    controller.loadData(catalog)
+    return controller.loadData(catalog)
 
 def printLikesData(videos):
     size = len(videos)
@@ -75,9 +75,11 @@ while True:
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog = initCatalog()
-        loadData(catalog)
+        respuesta = loadData(catalog)
         resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
         print(resultado)
+        print("Tiempo [ms]: ", f"{respuesta[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[1]:.3f}")
 
     elif int(inputs[0]) == 2:
         categoria = input("Ingrese la categoría a consultar: ")

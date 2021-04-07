@@ -47,11 +47,11 @@ def newCatalog():
     
 
     catalog ['categoryId'] = mp.newMap(100,
-                                   maptype='CHAINING',
+                                   maptype='PROBING',
                                    loadfactor=4.0
                                    )
     catalog ['categoryName'] = mp.newMap(100,
-                                   maptype='CHAINING',
+                                   maptype='PROBING',
                                    loadfactor=4.0
                                   )
     return catalog
