@@ -39,7 +39,8 @@ def printMenu():
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
     print("3- Videos con más likes para una categoría")
-    print("4- Ordenar mejores videos de un año")
+    print("4- n videos con más views para un pais y categoria")
+    print("5- video más trending para un país")
     print("0- Salir")
 
 
