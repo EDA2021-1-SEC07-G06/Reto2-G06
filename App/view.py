@@ -36,6 +36,7 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
+<<<<<<< HEAD
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
     print("3- Videos con más likes para una categoría")
@@ -43,20 +44,24 @@ def printMenu():
     print("5- video más trending para un país")
     print("0- Salir")
 
+=======
+    print("1- Cargar información en el catálogo")
+    print("2- Videos con más likes para una categoría")
+>>>>>>> b3307c34875ac0e416e3c64ac3988ca0827da8a7
 
 catalog = None
 
-def initCatalog():
+def initCatalog(tipo, factor):
     """
     Inicializa el catalogo de videos
     """
-    return controller.initCatalog(metodo, factor)
+    return controller.initCatalog(tipo,factor)
 
 def loadData(catalog):
     """
     Carga los videos en la estructura de datos
     """
-    controller.loadData(catalog)
+    return controller.loadData(catalog)
 
 def printLikesData(videos):
     size = len(videos)
@@ -73,32 +78,33 @@ def printLikesData(videos):
 
 """
 Menu principal
-""" 
+"""
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-
     if int(inputs[0]) == 1:
-        print("Inicializando Catálogo ....")
-        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
-        factor = float(input("Ingrese el factor de carga: "))
-        cont = controller.initCatalog(metodo, factor)
+        rta = input("Seleccione el tipo de carga:\n" + "1. PROBING\n" + "2. CHAINING\n")
+        if(int(rta) == 1):
+            tipo = 'PROBING'
+        elif(int(rta) == 2):
+            tipo = 'CHAINING'
+        else:
+            print("Fuera de rango.")
+            sys.exit(0)
+        factor = input("Digite el factor de carga:\n")
+        print("Cargando información de los archivos ....")
+        catalog = initCatalog(tipo, float(factor))
+        respuesta = loadData(catalog)
+        resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
+        print(resultado)
+        print("Tiempo [ms]: ", f"{respuesta[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{respuesta[1]:.3f}")
 
     elif int(inputs[0]) == 2:
-        print("Cargando información de los archivos ...")
-
-        answer = controller.loadData(cont)
-        print('Videos cargados: ' + str(controller.videosSize(cont)))
-        print('Categorias cargadas: ' + str(controller.categorySize(cont)))
-        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
-
-    elif int(inputs[0]) == 3:
         categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
         mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
         printLikesData(mas_likes)
-
     else:
         sys.exit(0)
 sys.exit(0)

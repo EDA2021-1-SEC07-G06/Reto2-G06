@@ -38,26 +38,20 @@ los mismos.
 """
 
 # Construccion de modelos
-def newCatalog(metodo, factor):
+def newCatalog(tipo,factor):
 
-    catalog =  { 'videos' : None, 'categorys': None ,
-                 'categoryId' : None, 'categoryName' : None,
-                 'country_name' : None}
+    catalog =  { 'videos' : None, 'categorys': None , 'categoryId' : None, 'categoryName' : None,}
     
     catalog['videos'] =  lt.newList('ARRAY_LIST')
     catalog['categorys'] = lt.newList('ARRAY_LIST', cmpfunction = cmpByIdCategory)
     
 
     catalog ['categoryId'] = mp.newMap(100,
-                                   maptype= metodo,
+                                   maptype= tipo,
                                    loadfactor= factor
                                    )
     catalog ['categoryName'] = mp.newMap(100,
-                                   maptype= metodo,
-                                   loadfactor= factor
-                                  )
-    catalog ['country_name'] = mp.newMap(100,
-                                   maptype= metodo,
+                                   maptype=tipo,
                                    loadfactor= factor
                                   )
     return catalog
@@ -186,19 +180,6 @@ def getInfoVideos(lista1, lista2, lista3):
     return lista_final
 
 # Funciones de consulta
-
-def videosSize(catalog):
-    """
-    Número de videos en el catago
-    """
-    return lt.size(catalog['videos'])
-
-
-def categorySize(catalog):
-    """
-    Número de videos en el catago
-    """
-    return lt.size(catalog['categoryId'])
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
