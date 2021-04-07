@@ -41,11 +41,11 @@ def printMenu():
 
 catalog = None
 
-def initCatalog():
+def initCatalog(tipo, factor):
     """
     Inicializa el catalogo de videos
     """
-    return controller.initCatalog()
+    return controller.initCatalog(tipo,factor)
 
 def loadData(catalog):
     """
@@ -73,8 +73,17 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
+        rta = input("Seleccione el tipo de carga:\n" + "1. PROBING\n" + "2. CHAINING\n")
+        if(int(rta) == 1):
+            tipo = 'PROBING'
+        elif(int(rta) == 2):
+            tipo = 'CHAINING'
+        else:
+            print("Fuera de rango.")
+            sys.exit(0)
+        factor = input("Digite el factor de carga:\n")
         print("Cargando información de los archivos ....")
-        catalog = initCatalog()
+        catalog = initCatalog(tipo, float(factor))
         respuesta = loadData(catalog)
         resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
         print(resultado)
