@@ -36,8 +36,18 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
+<<<<<<< HEAD
+    print("1- Inicializar Catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Videos con más likes para una categoría")
+    print("4- n videos con más views para un pais y categoria")
+    print("5- video más trending para un país")
+    print("0- Salir")
+
+=======
     print("1- Cargar información en el catálogo")
     print("2- Videos con más likes para una categoría")
+>>>>>>> b3307c34875ac0e416e3c64ac3988ca0827da8a7
 
 catalog = None
 
