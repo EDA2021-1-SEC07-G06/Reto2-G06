@@ -109,6 +109,13 @@ def categorySize(catalog):
     """
     return model.categorySize(catalog)
 
+def getTrendingViews(category_name, country, n):
+    """
+    Retorna los n videos con más views para un país y categoría
+    """
+    views = model.getTrendig views(category_name, country, n)
+    return views
+
 
 def getTrendingCountry(catalog, country):
     """

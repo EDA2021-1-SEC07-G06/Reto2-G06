@@ -39,8 +39,8 @@ def printMenu():
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
     print("3- Videos con más likes para una categoría")
-    print("4- n videos con más views para un pais y categoria")
-    print("5- video más trending para un país")
+    print("4- n videos con más views para un pais y categoria (req. 1)")
+    print("5- video más trending para un país (req. 2)")
     print("0- Salir")
 
 
@@ -106,6 +106,16 @@ while True:
         printLikesData(mas_likes)
 
     elif int(inputs[0]) == 4:
+        country = input("Nombre del país: ")
+        category_name = input("Categoría")
+        n = input("Cantidad de videos")
+        respuesta = controller.getTrendingViews(category_name, country, n)
+        if respuesta == None:
+            print("No se encontraron videos")
+        else:
+            printViewsData(respuesta)
+
+    elif int(inputs[0]) == 5:
         country = input("Nombre del país: ")
         respuesta = controller.getTrendingCountry(cont, country)
         if respuesta == None:

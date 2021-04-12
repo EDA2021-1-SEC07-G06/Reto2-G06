@@ -252,6 +252,15 @@ def cmpByIdCategory(cat1,cat2):
 
 
 # Funciones de ordenamiento
+def getTrendingViews(category_name, country, n):
+    #recorrer el mapa y garantizar que se cumplan el país y categoría que se busca
+    videos_pais = mp.get(catalog['country_name'], country)
+    categorias = mp.get(catalog['categoryName'], category_name)
+    
+    tamaño = mp.size(videos_pais)
+    tamaño_map = size_mapa(tamaño)
+    mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+
 
 def getTrendingCountry (catalog, country):
     print("En getTrendingCountry "+country)
