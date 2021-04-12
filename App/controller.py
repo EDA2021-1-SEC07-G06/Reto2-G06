@@ -20,11 +20,11 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+import time
+import tracemalloc
 import config as cf
 import model
 import csv
-import time
-import tracemalloc
 
 
 """
@@ -32,11 +32,11 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
-def initCatalog(tipo,factor):
+def initCatalog(metodo, factor):
     """
     Llama la funcion de inicializacion del catalogo del modelo.
     """
-    catalog = model.newCatalog(tipo,factor)
+    catalog = model.newCatalog(metodo, factor)
     return catalog
     
 # Funciones para la carga de datos
@@ -52,7 +52,6 @@ def loadData(catalog):
     start_time = getTime()
     start_memory = getMemory()
 
-    
     loadCategory(catalog)
     loadVideos(catalog)
 
@@ -63,13 +62,13 @@ def loadData(catalog):
     delta_time = stop_time - start_time
     delta_memory = deltaMemory(start_memory, stop_memory)
 
-    return delta_time, delta_memory
+    return delta_time, delta_memory    
 
 def loadVideos(catalog):
     """
     Carga los videos del archivo.
     """
-    videosfile = cf.data_dir + 'videos-30pct.csv'
+    videosfile = cf.data_dir + 'videos-small.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
@@ -77,7 +76,7 @@ def loadVideos(catalog):
 
 def loadCategory(catalog):
     """
-    Carga todos los tags del archivo y los agrega a la lista de tags
+    Carga todas las categorias del archivo y las agrega a la lista de categorias
     """
     categoryfile = cf.data_dir + 'category-id.csv'
     input_file = csv.DictReader(open(categoryfile, encoding='utf-8'), delimiter = '\t')
@@ -95,6 +94,31 @@ def getVideosByLikes(catalog, categoria, n):
     """
     likes = model.getVideosByLikes(catalog, categoria, n)
     return likes
+
+
+def videosSize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.videosSize(catalog)
+
+
+def categorySize(catalog):
+    """
+    Numero de videos cargados al catalogo
+    """
+    return model.categorySize(catalog)
+
+
+def getTrendingCountry(catalog, country):
+    """
+    Retorna los videos de un país
+    """
+    pais = model.getTrendingCountry(catalog, country)
+    return pais
+
+#   Funciones para medir tiempo y memoria
+
 
 def getTime():
     """
