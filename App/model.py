@@ -92,10 +92,10 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'],video)
     addVideoCategory(catalog, int(video['category_id']) , video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
-    mp.put(catalog['categorys'], video['video_id'], video)
+    mp.put(catalog['videos'], video['video_id'], video)
     categorias = videos["categorys"]
     for category in categorias:
-        addBookCategory(catalog, category, video)
+        addVideoCategory(catalog, category, video)
     addVideoCountry(catalog, video)
     
 

@@ -86,9 +86,15 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Inicializando Catálogo ....")
-        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
-        factor = float(input("Ingrese el factor de carga: "))
+        predeterminado = input("¿Quiere usar el método y factor predeterminado? (si/no) ")
+        if predeterminado == "si":
+            metodo = "CHAINING"
+            factor = int("4")
+        elif predeterminado == "no":
+            metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
+            factor = float(input("Ingrese el factor de carga: "))
         cont = controller.initCatalog(metodo, factor)
+        print("El catálogo fue inicializado")
 
     elif int(inputs[0]) == 2:
         print("Cargando información de los archivos ...")
