@@ -96,8 +96,10 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'],video)
     addVideoCategory(catalog, int(video['category_id']) , video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
+    print(video['video_id'])
+    print(video)
     mp.put(catalog['videos'], video['video_id'], video)
-    categorias = videos["categorys"]
+    categorias = video["categorys"]
     for category in categorias:
         addVideoCategory(catalog, category, video)
     addVideoCountry(catalog, video)
@@ -349,7 +351,7 @@ def compareCountryNames(name, country):
     countentry = me.getKey(country)
     if (name == countentry):
         return 0
-    elif (name == countentry):
+    elif (name > countentry):
         return 1
     else:
         return -1
