@@ -76,6 +76,8 @@ def newCatalog(metodo, factor):
                                    comparefunction = compareCountryNames)
     return catalog
 
+# Funciones para creacion de datos
+
 def newCategory(id, name):
     """
     Crea una nueva estructura para modelar los videos de
@@ -86,6 +88,8 @@ def newCategory(id, name):
     categorys['name'] = name.strip()
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
+
+# Funciones para agregar informacion al catalogo
     
 def addVideo(catalog, video):
     
@@ -157,13 +161,6 @@ def addVideoCountry(catalog, video):
         lt.addLast(countries['video'], video)
     except Exception:
         return None
-
-
-    
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
-
 
 def getVideosByLikes(catalog, categoria, n):
     list_videos_pais = []
