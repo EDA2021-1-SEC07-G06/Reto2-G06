@@ -56,6 +56,8 @@ def newCatalog(tipo,factor):
                                   )
     return catalog
 
+# Funciones para creacion de datos
+
 def newCategory(id, name):
     """
     Crea una nueva estructura para modelar los videos de
@@ -66,6 +68,8 @@ def newCategory(id, name):
     categorys['name'] = name.strip()
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
+
+# Funciones para agregar informacion al catalogo
     
 def addVideo(catalog, video):
     
@@ -113,13 +117,6 @@ def addCategory(catalog, category):
     mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
     mp.put(catalog['categoryName'], category['name'], nuevaCategoria)
     
-
-
-
-    
-# Funciones para agregar informacion al catalogo
-
-# Funciones para creacion de datos
 
 
 def getVideosByLikes(catalog, categoria, n):
@@ -180,7 +177,10 @@ def getInfoVideos(lista1, lista2, lista3):
     return lista_final
 
 # Funciones de consulta
-
+def getTrendingVideo(catalog, categoria):
+    video = None
+    catalogoVideos =  catalog['categoryName']
+    return video
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpByIdCategory(cat1,cat2):

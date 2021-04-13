@@ -36,18 +36,9 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-<<<<<<< HEAD
-    print("1- Inicializar Catálogo")
-    print("2- Cargar información en el catálogo")
-    print("3- Videos con más likes para una categoría")
-    print("4- n videos con más views para un pais y categoria")
-    print("5- video más trending para un país")
-    print("0- Salir")
-
-=======
     print("1- Cargar información en el catálogo")
     print("2- Videos con más likes para una categoría")
->>>>>>> b3307c34875ac0e416e3c64ac3988ca0827da8a7
+    print("3- Video que más ha sido trending dada una categoria")
 
 catalog = None
 
@@ -95,8 +86,10 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog(tipo, float(factor))
         respuesta = loadData(catalog)
-        resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])))
+        resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])) + '\n'
+                     + 'Categorias cargadas: ' + str(lt.size(catalog['categorys'])) )
         print(resultado)
+
         print("Tiempo [ms]: ", f"{respuesta[0]:.3f}", "  ||  ",
               "Memoria [kB]: ", f"{respuesta[1]:.3f}")
 
@@ -104,6 +97,11 @@ while True:
         categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
         mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
+        printLikesData(mas_likes)
+
+    elif int(inputs[0]) == 3:
+        categoria = input("Ingrese la categoría a consultar: ")
+        mas_Video =  controller.getTrendingVideo(catalog, categoria)
         printLikesData(mas_likes)
     else:
         sys.exit(0)
