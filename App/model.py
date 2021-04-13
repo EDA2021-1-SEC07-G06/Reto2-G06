@@ -89,39 +89,19 @@ def newCategory(id, name):
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
 
+def newCountry(country):
+    countrys = {'country':'','videos': None }
+    countrys['country'] = country
+    countrys['videos'] = lt.newList('ARRAY_LIST')
+
 # Funciones para agregar informacion al catalogo
     
 def addVideo(catalog, video):
     
     lt.addLast(catalog['videos'],video)
-    addVideoCategory(catalog, int(video['category_id']) , video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
-    mp.put(catalog['videos'], video['video_id'], video)
-    categorias = videos["categorys"]
-    for category in categorias:
-        addVideoCategory(catalog, category, video)
+    addVideoNameCategory(catalog, int(video['category_id']), video)
     addVideoCountry(catalog, video)
-    
-
-def addVideoCategory(catalog, identificador, video):
-    
-    categorys = catalog['categorys']
-    categoryTosearch = newCategory(identificador, '')
-    posCategory = lt.isPresent(categorys, categoryTosearch)
-    if posCategory > 0:
-        
-        categ = lt.getElement(categorys, posCategory)
-        nombre = categ['name']
-        categName  = catalog['categoryName']
-        existName = mp.contains(categName,nombre)
-        if existName:
-            entry = mp.get(categName,nombre)
-            valor = me.getValue(entry)
-            lt.addLast(valor['videos'],video)
-    else: 
-        categ = newCategory(identificador, 'desconocida')
-        lt.addLast(categorys, categ)
-    lt.addLast(categ['videos'], video)
 
 def addVideoIdCategory(catalog, identificador, video):
     categId = catalog['categoryId']
@@ -135,6 +115,24 @@ def addVideoIdCategory(catalog, identificador, video):
         lt.addLast(nuevaCateg['videos'],video)
         mp.put(categId,identificador,nuevaCateg)
 
+def addVideoNameCategory(catalog, identificador, video):
+    
+    categorys = catalog['categorys']
+    categoryTosearch = newCategory(identificador, '')
+    posCategory = lt.isPresent(categorys, categoryTosearch)
+    if posCategory > 0:
+        categ = lt.getElement(categorys, posCategory)
+        nombre = categ['name']
+        categName  = catalog['categoryName']
+        existName = mp.contains(categName,nombre)
+        if existName:
+            entry = mp.get(categName,nombre)
+            valor = me.getValue(entry)
+            lt.addLast(valor['videos'],video)
+    else: 
+        categ = newCategory(identificador, 'desconocida')
+        lt.addLast(categorys, categ)
+    lt.addLast(categ['videos'], video)
 
 def addCategory(catalog, category):
    
