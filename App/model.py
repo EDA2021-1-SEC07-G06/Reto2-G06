@@ -92,7 +92,7 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'],video)
     addVideoCategory(catalog, int(video['category_id']) , video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
-    mp.put(catalog['category'], video['video_id'], video)
+    mp.put(catalog['categorys'], video['video_id'], video)
     categorias = videos["categorys"]
     for category in categorias:
         addBookCategory(catalog, category, video)
@@ -150,9 +150,9 @@ def addVideoCountry(catalog, video):
         existcountries = mp.contains(countries, country)
         if existcountries:
             entry = mp.get(countries, country)
-            pais = me.getValue(entry)
+            country = me.getValue(entry)
         else:
-            pais = newCountry(country)
+            country = newCountry(country)
             mp.put(countries, country, countries)
         lt.addLast(countries['video'], video)
     except Exception:
@@ -260,6 +260,7 @@ def getTrendingViews(category_name, country, n):
     tamaño = mp.size(videos_pais)
     tamaño_map = size_mapa(tamaño)
     mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+    pass
 
 
 def getTrendingCountry (catalog, country):
