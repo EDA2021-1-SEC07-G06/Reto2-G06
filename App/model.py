@@ -149,14 +149,15 @@ def addVideoCountry(catalog, video):
     """
     try:
         countries = catalog['country_name']
-        existcountries = mp.contains(countries, country)
+        pubcountry = video["country"]
+        existcountries = mp.contains(countries, pubcountry)
         if existcountries:
-            entry = mp.get(countries, country)
+            entry = mp.get(countries, pubcountry)
             country = me.getValue(entry)
         else:
-            country = newCountry(country)
-            mp.put(countries, country, countries)
-        lt.addLast(countries['video'], video)
+            country = newCountry(pubcountry)
+            mp.put(countries, pubcountry, country)
+        lt.addLast(country['video'], video)
     except Exception:
         return None
 
