@@ -100,16 +100,11 @@ def addVideo(catalog, video):
     
     lt.addLast(catalog['videos'],video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
-<<<<<<< HEAD
-    print(video['video_id'])
-    print(video)
     mp.put(catalog['videos'], video['video_id'], video)
     categorias = video["categorys"]
     for category in categorias:
         addVideoCategory(catalog, category, video)
-=======
     addVideoNameCategory(catalog, int(video['category_id']), video)
->>>>>>> f5764b68fa5747da2ae5002a5f5f6f1e46f4f7f1
     addVideoCountry(catalog, video)
 
 def addVideoIdCategory(catalog, identificador, video):
