@@ -36,23 +36,27 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- Videos con más likes para una categoría")
-    print("3- Video que más ha sido trending dada una categoria")
+    print("1- Inicializar Catálogo")
+    print("2- Cargar información en el catálogo")
+    print("3- Videos con más likes para una categoría")
+    print("4- n videos con más views para un pais y categoria (req. 1)")
+    print("5- video más trending para un país (req. 2)")
+    print("0- Salir")
+
 
 catalog = None
 
-def initCatalog(tipo, factor):
+def initCatalog():
     """
     Inicializa el catalogo de videos
     """
-    return controller.initCatalog(tipo,factor)
+    return controller.initCatalog(metodo, factor)
 
 def loadData(catalog):
     """
     Carga los videos en la estructura de datos
     """
-    return controller.loadData(catalog)
+    controller.loadData(catalog)
 
 def printLikesData(videos):
     size = len(videos)
@@ -67,42 +71,58 @@ def printLikesData(videos):
         print('No se encontraron videos')
 
 
+def printCountryData(titulo, canal, country, dias_trending):
+        print('Video encontrado: ' + titulo)
+        print('Canal: ' + canal)
+        print('País: ' + country)
+        print('Número de días:' + str(dias_trending))
+
 """
 Menu principal
-"""
+""" 
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        rta = input("Seleccione el tipo de carga:\n" + "1. PROBING\n" + "2. CHAINING\n")
-        if(int(rta) == 1):
-            tipo = 'PROBING'
-        elif(int(rta) == 2):
-            tipo = 'CHAINING'
-        else:
-            print("Fuera de rango.")
-            sys.exit(0)
-        factor = input("Digite el factor de carga:\n")
-        print("Cargando información de los archivos ....")
-        catalog = initCatalog(tipo, float(factor))
-        respuesta = loadData(catalog)
-        resultado = ('Videos cargados: ' + str(lt.size(catalog['videos'])) + '\n'
-                     + 'Categorias cargadas: ' + str(lt.size(catalog['categorys'])) )
-        print(resultado)
 
-        print("Tiempo [ms]: ", f"{respuesta[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{respuesta[1]:.3f}")
+    if int(inputs[0]) == 1:
+        print("Inicializando Catálogo ....")
+        metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
+        factor = float(input("Ingrese el factor de carga: "))
+        cont = controller.initCatalog(metodo, factor)
 
     elif int(inputs[0]) == 2:
+        print("Cargando información de los archivos ...")
+
+        answer = controller.loadData(cont)
+        print('Videos cargados: ' + str(controller.videosSize(cont)))
+        print('Categorias cargadas: ' + str(controller.categorySize(cont)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
+    elif int(inputs[0]) == 3:
         categoria = input("Ingrese la categoría a consultar: ")
         n = int(input("Ingrese el número de videos que quiere listar: "))
         mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
         printLikesData(mas_likes)
 
-    elif int(inputs[0]) == 3:
-        categoria = input("Ingrese la categoría a consultar: ")
-        mas_Video =  controller.getTrendingVideo(catalog, categoria)
-        printLikesData(mas_likes)
+    elif int(inputs[0]) == 4:
+        country = input("Nombre del país: ")
+        category_name = input("Categoría")
+        n = input("Cantidad de videos")
+        respuesta = controller.getTrendingViews(category_name, country, n)
+        if respuesta == None:
+            print("No se encontraron videos")
+        else:
+            printViewsData(respuesta)
+
+    elif int(inputs[0]) == 5:
+        country = input("Nombre del país: ")
+        respuesta = controller.getTrendingCountry(cont, country)
+        if respuesta == None:
+            print("No se encontraron videos")
+        else:
+            printCountryData(respuesta)
+
     else:
         sys.exit(0)
 sys.exit(0)

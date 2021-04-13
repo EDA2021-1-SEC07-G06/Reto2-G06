@@ -38,22 +38,42 @@ los mismos.
 """
 
 # Construccion de modelos
-def newCatalog(tipo,factor):
+def newCatalog(metodo, factor):
+    
+    """ Inicializa el catálogo de videos
 
-    catalog =  { 'videos' : None, 'categorys': None , 'categoryId' : None, 'categoryName' : None,}
+    Crea una lista vacia para guardar todos los videos
+
+    Se crean indices (Maps) por los siguientes criterios:
+    Videos
+    Categorias
+    Id de categoria
+    Nombres de categorias
+    Nombres de paises
+
+    Retorna el catalogo inicializado.
+    """
+
+    catalog =  { 'videos' : None, 'categorys': None ,
+                 'categoryId' : None, 'categoryName' : None,
+                 'country_name' : None}
     
     catalog['videos'] =  lt.newList('ARRAY_LIST')
     catalog['categorys'] = lt.newList('ARRAY_LIST', cmpfunction = cmpByIdCategory)
     
 
     catalog ['categoryId'] = mp.newMap(100,
-                                   maptype= tipo,
-                                   loadfactor= factor
-                                   )
+                                   maptype= metodo,
+                                   loadfactor= factor,
+                                   comparefunction = compareCategoryIds)
     catalog ['categoryName'] = mp.newMap(100,
-                                   maptype=tipo,
-                                   loadfactor= factor
-                                  )
+                                   maptype= metodo,
+                                   loadfactor= factor,
+                                   comparefunction = compareCategoryName)
+    catalog ['country_name'] = mp.newMap(100,
+                                   maptype= metodo,
+                                   loadfactor= factor,
+                                   comparefunction = compareCountryNames)
     return catalog
 
 # Funciones para creacion de datos
@@ -76,6 +96,12 @@ def addVideo(catalog, video):
     lt.addLast(catalog['videos'],video)
     addVideoCategory(catalog, int(video['category_id']) , video)
     addVideoIdCategory(catalog, int(video['category_id']) , video)
+    mp.put(catalog['category'], video['video_id'], video)
+    categorias = videos["categorys"]
+    for category in categorias:
+        addBookCategory(catalog, category, video)
+    addVideoCountry(catalog, video)
+    
 
 def addVideoCategory(catalog, identificador, video):
     
@@ -117,7 +143,24 @@ def addCategory(catalog, category):
     mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
     mp.put(catalog['categoryName'], category['name'], nuevaCategoria)
     
-
+def addVideoCountry(catalog, video):
+    """
+    Esta funcion adiciona un video a la lista de videos de un pais especifico.
+    Los paises se guardan en un Map, donde la llave es el pais
+    y el valor la lista de videos de ese pais.
+    """
+    try:
+        countries = catalog['country']
+        existcountries = mp.contains(countries, country)
+        if existcountries:
+            entry = mp.get(countries, country)
+            pais = me.getValue(entry)
+        else:
+            pais = newCountry(country)
+            mp.put(countries, country, countries)
+        lt.addLast(countries['video'], video)
+    except Exception:
+        return None
 
 def getVideosByLikes(catalog, categoria, n):
     list_videos_pais = []
@@ -177,10 +220,20 @@ def getInfoVideos(lista1, lista2, lista3):
     return lista_final
 
 # Funciones de consulta
-def getTrendingVideo(catalog, categoria):
-    video = None
-    catalogoVideos =  catalog['categoryName']
-    return video
+
+def videosSize(catalog):
+    """
+    Número de videos en el catago
+    """
+    return lt.size(catalog['videos'])
+
+
+def categorySize(catalog):
+    """
+    Número de videos en el catago
+    """
+    return lt.size(catalog['categoryId'])
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpByIdCategory(cat1,cat2):
@@ -196,3 +249,107 @@ def cmpByIdCategory(cat1,cat2):
 
 
 # Funciones de ordenamiento
+def getTrendingViews(category_name, country, n):
+    #recorrer el mapa y garantizar que se cumplan el país y categoría que se busca
+    videos_pais = mp.get(catalog['country_name'], country)
+    categorias = mp.get(catalog['categoryName'], category_name)
+    
+    tamaño = mp.size(videos_pais)
+    tamaño_map = size_mapa(tamaño)
+    mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+
+
+def getTrendingCountry (catalog, country):
+    print("En getTrendingCountry "+country)
+    videos_pais = mp.get(catalog['country_name'], country)
+    print(catalog)
+    print("Linea 122 ")
+    print(videos_pais)
+    if videos_pais:
+        tamaño = mp.size(videos_pais)
+        tamaño_map = size_mapa(tamaño)
+        mapa_id = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+
+        for video in videos_pais:
+            if video not in mapa_id:
+                mp.put(mapa_id, video["video_id"], 1)
+            else:
+                resultado = mp.get(mapa_id, video["video_id"])
+                mp.put(mapa_id, video["video_id"], (resultado[1]+ 1))
+    else: 
+        return None
+
+    print("Tamanno "+ str(tamaño))
+    mas_trending = ""
+    dias_trending = 0
+    for video in mapa_id:
+        v = mp.get(mapa_id, video)
+        if v[1] > dias_trending:
+            dias_trending = v[1]
+            mas_trending = v[0]
+
+    for video in mapa_id:
+        if video == mas_trending:
+            titulo = video["title"]
+            canal = video["cannel_title"]
+            return (titulo, canal, country, dias_trending)
+
+def es_primo (num):
+    resultado = True
+    for n in range(2,num):
+        if num % n == 0:
+            resultado = False
+    return resultado
+
+def size_mapa (num):
+    size = (num*2) + 1
+    terminar = 1
+
+    while terminar > 0:
+        if es_primo(size) == True:
+            terminar = 0
+        else:
+            size += 1
+    return size
+
+#  Funciones de comparación
+
+def compareCategoryIds(id, entry):
+    """
+    Compara dos ids de categorias. 
+    """
+    identry = me.getKey(entry)
+    if (int(id) == int(identry)):
+        return 0
+    elif (int(id) > int(identry)):
+        return 1
+    else:
+        return -1
+
+def compareCategoryName(keyname, name):
+    """
+    Compara dos nombres de categorias. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    namentry = me.getKey(name)
+    if (keyname == namentry):
+        return 0
+    elif (keyname > namentry):
+        return 1
+    else:
+        return -1
+
+
+def compareCountryNames(name, country):
+    """
+    Compara dos nombres de paises. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    countentry = me.getKey(country)
+    if (name == countentry):
+        return 0
+    elif (name == countentry):
+        return 1
+    else:
+        return -1
+
