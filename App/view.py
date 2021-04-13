@@ -103,7 +103,7 @@ while True:
         print('Videos cargados: ' + str(controller.videosSize(cont)))
         print('Categorias cargadas: ' + str(controller.categorySize(cont)))
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+              "Memoria [kB]: ", f"{answer[1]:.3f}")         
 
     elif int(inputs[0]) == 3:
         categoria = input("Ingrese la categoría a consultar: ")

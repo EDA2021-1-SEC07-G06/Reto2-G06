@@ -148,7 +148,7 @@ def addVideoCountry(catalog, video):
     y el valor la lista de videos de ese pais.
     """
     try:
-        countries = catalog['country']
+        countries = catalog['country_name']
         existcountries = mp.contains(countries, country)
         if existcountries:
             entry = mp.get(countries, country)
@@ -259,10 +259,10 @@ def getTrendingViews(category_name, country, n):
 
 
 def getTrendingCountry (catalog, country):
-    print("En getTrendingCountry "+country)
+    #print("En getTrendingCountry "+country)
     videos_pais = mp.get(catalog['country_name'], country)
-    print(catalog)
-    print("Linea 122 ")
+    #print(catalog)
+    print("videos del pais")
     print(videos_pais)
     if videos_pais:
         tamaño = mp.size(videos_pais)
