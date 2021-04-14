@@ -323,14 +323,41 @@ def prueba(catalog):
 
 # Funciones de ordenamiento
 def getTrendingViews(category_name, country, n):
-    #recorrer el mapa y garantizar que se cumplan el país y categoría que se busca
     videos_pais = mp.get(catalog['country_name'], country)
-    categorias = mp.get(catalog['categoryName'], category_name)
     
     tamaño = mp.size(videos_pais)
     tamaño_map = size_mapa(tamaño)
     mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
-    pass
+    lista_views = lt.newList('ARRAY_LIST')
+
+    if videos_pais == None:
+        return None
+    else:
+        for video in videos_pais:
+            if video["category"] == category_name:
+                mp.put(mapa_views, video["video_id"], video)
+                lt.addLast(lista_views, video["views"])
+                    
+    lista_ordenada = ms.sort(lista_views, cmpVideosByViews)
+    t_views = lt.size(lista_ordenada)
+    
+    if t_views <= n:
+        listafinal = lt.subList(lista_ordenada,0,t_views)
+    elif t_views > n:
+        listafinal = lt.subList(listaOrdenada,0,n)
+
+    resultado = getInfoVideos(listafinal, mapa_views)
+    
+    return resultado 
+
+def getInfoVideos(lista1, map):
+#crear el mapa
+
+    for views in lista1:
+#mirar si los views todos son diferentes
+# si los views son iguales, si ya está el video agregar el siguiente video con igual views 
+#buscar la info de los videos en el mapa, llenar el mapa y devolver un nuevo mapa
+    return lista_final
 
 
 def getTrendingCountry (catalog, country):
