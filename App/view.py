@@ -23,7 +23,6 @@
 import config as cf
 import sys
 import controller
-import model
 from DISClib.ADT import list as lt
 assert cf
 
@@ -42,7 +41,7 @@ def printMenu():
     print("3- Video con más trending para una categoría")
     print("4- n videos con más views para un pais y categoria (req. 1)")
     print("5- video más trending para un país (req. 2)")
-    print("6- n videos con mas likes dado una pais y tag (req. 2)")
+    print("6- n videos con mas likes dado una pais y tag ")
     print("0- Salir")
 
 
@@ -143,7 +142,11 @@ while True:
             printCountryData(respuesta)
 
     elif int(inputs[0]) == 6:
-        model.prueba(catalog)
+        country = input('Ingrese el pais: ')
+        tag = input('Ingrese el tag: ')
+        num = input('Ingrese el numero de videos: ')
+        respuesta = controller.getTagCountry(catalog, country, tag, num)
+        None
 
     else:
         sys.exit(0)

@@ -295,8 +295,6 @@ def getTrendingVideo(catalog, category_name):
             pos += 1
             tamaño -= 1
     
-
-
     else:
         print('No se encontro la categoria.')
         resultado = {None,'n',0}
@@ -304,10 +302,6 @@ def getTrendingVideo(catalog, category_name):
     resultado = masTrending, category_name.strip(), Mayor
     return resultado
         
-def prueba(catalog):
-    
-    cat = catalog['categoryName']
-    print(mp.size(cat))
 
 
 # Funciones de ordenamiento
@@ -321,6 +315,42 @@ def getTrendingViews(category_name, country, n):
     mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
     pass
 
+def getTagCountry(catalog,country, pTag, num):
+    countrys = catalog['country_name']
+    existCountry  =  mp.contains(countrys,country)
+
+    lista = lt.newList('ARRAY_LIST')
+
+    if existCountry:
+        entry = mp.get(countrys, country)
+        valor = me.getValue(entry)
+        videos = valor['videos']
+        tamaño = lt.size(videos)
+        pos = 0
+        while tamaño > 0:
+            videoActual = lt.getElement(videos, pos)
+            tags = videoActual[tags].lower()
+            ltTags = tags.split('|')
+            tamTag = lt.size(ltTags)
+            
+            posTag = 0
+            while tamTag > 0:
+                tag = lt.getElement(ltTags,posTag)
+                if tag == pTag:
+                   lt.addLast(lista, videoActual)
+                   tamTag = 0
+                posTag += 1
+                tamTag -= 1
+
+            
+            posTag = 0
+            pos += 1
+            tamaño -= 1
+
+
+    else:
+        print('El pais no esta registrado. ')
+    None 
 
 def getTrendingCountry (catalog, country):
     #print("En getTrendingCountry "+country)

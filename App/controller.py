@@ -130,6 +130,9 @@ def getTrendingVideo(catalog, categoria):
     resultado = model.getTrendingVideo(catalog, categoria)
     return resultado
 
+def getTagCountry(catalog,country, tag, num):
+    resultado = model.getTagCountry(catalog,country, tag, num)
+    return resultado
 
 def getTime():
     """
