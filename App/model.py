@@ -161,6 +161,17 @@ def addVideoCountry(catalog, video):
     except Exception:
         return None
 
+def newCountry(pubcountry):
+    """
+    Esta funcion crea la estructura de videos asociados
+    a un país.
+    """
+    entry = {'country': "", "videos": None}
+    entry['country'] = pubcountry
+    entry['videos'] = lt.newList('SINGLE_LINKED', compareCountries)
+    return entry
+
+
 def getVideosByLikes(catalog, categoria, n):
     list_videos_pais = []
     dict = {}
@@ -268,7 +279,7 @@ def getTrendingCountry (catalog, country):
     if videos_pais:
         tamaño = mp.size(videos_pais)
         tamaño_map = size_mapa(tamaño)
-        mapa_id = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+        mapa_id = mp.newMap(tamaño_map, type= "CHAINING", loadfactor = 4)
 
         for video in videos_pais:
             if video not in mapa_id:
@@ -353,3 +364,10 @@ def compareCountryNames(name, country):
     else:
         return -1
 
+def compareCountries(country1, country2):
+    if country1 == country2:
+        return 0
+    elif country1 > country2:
+        return 1
+    else:
+        return 0
