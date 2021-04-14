@@ -42,6 +42,7 @@ def printMenu():
     print("3- Video con más trending para una categoría")
     print("4- n videos con más views para un pais y categoria (req. 1)")
     print("5- video más trending para un país (req. 2)")
+    print("6- n videos con mas likes dado una pais y tag (req. 2)")
     print("0- Salir")
 
 
@@ -87,7 +88,7 @@ def printVideoData(video,catego, dias_trending):
         print('Canal: ' + str(video['channel_title']))   
     
     print('Categoria: '+ str(catego))
-    print('Numero de dias: '+ str(dias_trending))
+    print('Numero de dias: '+ str(int(dias_trending)))
 
 """
 Menu principal

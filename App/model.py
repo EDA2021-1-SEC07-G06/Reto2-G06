@@ -99,13 +99,15 @@ def newCountry(country):
 def addVideo(catalog, video):
     
     lt.addLast(catalog['videos'],video)
-    addVideoIdCategory(catalog, int(video['category_id']) , video)
-    addVideoNameCategory(catalog, int(video['category_id']), video)
+  #  addVideoIdCategory(catalog, video)
+    addVideoNameCategory(catalog, video)
     addVideoCountry(catalog, video)
 
 
 
-def addVideoIdCategory(catalog, identificador, video):
+def addVideoIdCategory(catalog, video):
+
+    identificador = video['category_id']
     categId = catalog['categoryId']
     existauthor = mp.contains(categId, identificador)
     if existauthor:
@@ -118,15 +120,13 @@ def addVideoIdCategory(catalog, identificador, video):
         lt.addLast(nuevaCateg['videos'],video)
         mp.put(categId,identificador,nuevaCateg)
 
-def addVideoNameCategory(catalog, identificador, video):
-    
-    categorys = catalog['categorys']
-    categoryTosearch = newCategory(identificador, '')
-    posCategory = lt.isPresent(categorys, categoryTosearch)
-    categName  = catalog['categoryName']
-    if posCategory > 0:
+def addVideoNameCategory(catalog, video):
         
-        categ = lt.getElement(categorys, posCategory)
+    identificador = video['category_id']
+    existeCate = existeCategoria(catalog, identificador) 
+    categName  = catalog['categoryName']
+    if existeCate > 0:
+        categ = lt.getElement(catalog['categorys'], existeCate)
         nombre = categ['name']
         existName = mp.contains(categName,nombre)
         if existName:
@@ -136,8 +136,10 @@ def addVideoNameCategory(catalog, identificador, video):
     else: 
         categ = newCategory(identificador, 'desconocida')
         lt.addLast(categ['videos'], video)
-        mp.put(categName, 'desconocida', categ )
-
+    
+    
+    
+    
 def addCategory(catalog, category):
    
     nuevaCategoria = newCategory(category['id'],category['name'])
@@ -145,7 +147,12 @@ def addCategory(catalog, category):
     mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
     mp.put(catalog['categoryName'], category['name'].strip(), nuevaCategoria)
 
-    
+def existeCategoria(catalog, identificador):
+
+    categorys = catalog['categorys']
+    categoryTosearch = newCategory(identificador, '')
+    posCategory = lt.isPresent(categorys, categoryTosearch)
+    return posCategory
 
     
 def addVideoCountry(catalog, video):
@@ -266,27 +273,32 @@ def getTrendingVideo(catalog, category_name):
         videos = valor['videos']
         tamaño = lt.size(videos)
         pos = 0
+
         while tamaño > 0:
             pos1 = 0
             videoActual = lt.getElement(videos,pos)
             contador = 0 
-            tamaño1 = lt.size(videos)
+            tamaño1 = lt.size(videos)   
             while tamaño1 > 0:
                 videoComparado = lt.getElement(videos,pos1)
-                print( videoActual['title'] + videoComparado['title'] )
+
                 if videoActual['title'] == videoComparado['title']:
-                   contador += 1  
-                elif contador > Mayor:
-                   masTrending = videoActual
-                   Mayor = contador
+                   contador += 1 
+                
                 pos1 += 1
                 tamaño1 -= 1
+                
+            if contador > Mayor:
+                   masTrending = videoActual
+                   Mayor = contador
+            contador = 0       
             pos += 1
-            tamaño = 0
+            tamaño -= 1
+    
+
 
     else:
-        print('pailo')
-
+        print('No se encontro la categoria.')
         resultado = {None,'n',0}
         
     resultado = masTrending, category_name.strip(), Mayor

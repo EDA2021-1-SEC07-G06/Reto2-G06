@@ -113,7 +113,7 @@ def getTrendingViews(category_name, country, n):
     """
     Retorna los n videos con más views para un país y categoría
     """
-    views = model.getTrendigViews(category_name, country, n)
+    views = model.getTrendingViews(category_name, country, n)
     return views
 
 
