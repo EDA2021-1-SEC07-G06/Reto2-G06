@@ -113,7 +113,7 @@ def getTrendingViews(category_name, country, n):
     """
     Retorna los n videos con más views para un país y categoría
     """
-    views = model.getTrendigViews(category_name, country, n)
+    views = model.getTrendingViews(category_name, country, n)
     return views
 
 
@@ -125,6 +125,10 @@ def getTrendingCountry(catalog, country):
     return pais
 
 #   Funciones para medir tiempo y memoria
+
+def getTrendingVideo(catalog, categoria):
+    resultado = model.getTrendingVideo(catalog, categoria)
+    return resultado
 
 
 def getTime():
@@ -156,5 +160,4 @@ def deltaMemory(start_memory, stop_memory):
     delta_memory = delta_memory/1024.0
     return delta_memory
 
-def getTrendingVideo(catalog, categoria):
-    return model.getTrendingVideo(catalog, categoria)
+
