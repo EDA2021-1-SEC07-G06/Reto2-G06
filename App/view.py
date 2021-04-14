@@ -23,6 +23,7 @@
 import config as cf
 import sys
 import controller
+import model
 from DISClib.ADT import list as lt
 assert cf
 
@@ -38,7 +39,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
-    print("3- Videos con más likes para una categoría")
+    print("3- Video con más trending para una categoría")
     print("4- n videos con más views para un pais y categoria (req. 1)")
     print("5- video más trending para un país (req. 2)")
     print("0- Salir")
@@ -72,10 +73,21 @@ def printLikesData(videos):
 
 
 def printCountryData(titulo, canal, country, dias_trending):
-        print('Video encontrado: ' + titulo)
-        print('Canal: ' + canal)
-        print('País: ' + country)
-        print('Número de días:' + str(dias_trending))
+    print('Video encontrado: ' + titulo)
+    print('Canal: ' + canal)
+    print('País: ' + country)
+    print('Número de días:' + str(dias_trending))
+
+def printVideoData(video,catego, dias_trending):
+    if video == None:
+        print('Video encontrado: Ninguno')
+        print('Canal: Ninguno')
+    else: 
+        print('Video encontrado: '+ str(video['title']) )
+        print('Canal: ' + str(video['channel_title']))   
+    
+    print('Categoria: '+ str(catego))
+    print('Numero de dias: '+ str(dias_trending))
 
 """
 Menu principal
@@ -94,6 +106,7 @@ while True:
             metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
             factor = float(input("Ingrese el factor de carga: "))
         cont = controller.initCatalog(metodo, factor)
+        catalog = cont 
         print("El catálogo fue inicializado")
 
     elif int(inputs[0]) == 2:
@@ -103,13 +116,12 @@ while True:
         print('Videos cargados: ' + str(controller.videosSize(cont)))
         print('Categorias cargadas: ' + str(controller.categorySize(cont)))
         print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")         
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 3:
         categoria = input("Ingrese la categoría a consultar: ")
-        n = int(input("Ingrese el número de videos que quiere listar: "))
-        mas_likes =  controller.getVideosByLikes(catalog, categoria, n)
-        printLikesData(mas_likes)
+        mas_Trending =  controller.getTrendingVideo(catalog, categoria)
+        printVideoData(mas_Trending[0], mas_Trending[1], mas_Trending[2])
 
     elif int(inputs[0]) == 4:
         country = input("Nombre del país: ")
@@ -128,6 +140,9 @@ while True:
             print("No se encontraron videos")
         else:
             printCountryData(respuesta)
+
+    elif int(inputs[0]) == 6:
+        model.prueba(catalog)
 
     else:
         sys.exit(0)

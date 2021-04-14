@@ -126,6 +126,10 @@ def getTrendingCountry(catalog, country):
 
 #   Funciones para medir tiempo y memoria
 
+def getTrendingVideo(catalog, categoria):
+    resultado = model.getTrendingVideo(catalog, categoria)
+    return resultado
+
 
 def getTime():
     """
@@ -156,5 +160,4 @@ def deltaMemory(start_memory, stop_memory):
     delta_memory = delta_memory/1024.0
     return delta_memory
 
-def getTrendingVideo(catalog, categoria):
-    return model.getTrendingVideo(catalog, categoria)
+
