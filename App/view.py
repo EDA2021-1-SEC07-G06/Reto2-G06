@@ -39,10 +39,9 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
-    print("3- Video con más trending para una categoría")
-    print("4- n videos con más views para un pais y categoria (req. 1)")
-    print("5- video más trending para un país (req. 2)")
-    print("6- n videos con mas likes dado una pais y tag (req. 2)")
+    print("3- n videos con más views para un pais y categoria (req. 1)")
+    print("4- video más trending para un país (req. 2)")
+    print("5- n videos con mas likes dado una pais y tag (req. 3)")
     print("0- Salir")
 
 
@@ -78,6 +77,16 @@ def printCountryData(titulo, canal, country, dias_trending):
     print('Canal: ' + canal)
     print('País: ' + country)
     print('Número de días:' + str(dias_trending))
+
+    
+def printViewsData(mapa):
+    print("\n Estos son los mejores videos: \n")
+    for video in mapa :
+        print( 'Fecha de tendencia: ' + mapa[video]['trending_date'] + 
+                ' \nTitulo: ' + mapa[video]['title'] + ' \nCanal: ' + mapa[video]['cannel_title'] +
+                ' \nTiempo de publicación: ' + mapa[video]['publish_time'] +
+                ' \nVistas: ' + mapa[video]['views'] + ' \nLikes: ' + mapa[video]['likes'] + 
+                ' \nDislikes: ' + mapa[video]['dislikes'] + "\n")
 
 def printVideoData(video,catego, dias_trending):
     if video == None:
@@ -120,29 +129,24 @@ while True:
               "Memoria [kB]: ", f"{answer[1]:.3f}")
 
     elif int(inputs[0]) == 3:
-        categoria = input("Ingrese la categoría a consultar: ")
-        mas_Trending =  controller.getTrendingVideo(catalog, categoria)
-        printVideoData(mas_Trending[0], mas_Trending[1], mas_Trending[2])
-
-    elif int(inputs[0]) == 4:
         country = input("Nombre del país: ")
         category_name = input("Categoría")
         n = input("Cantidad de videos")
-        respuesta = controller.getTrendingViews(category_name, country, n)
+        respuesta = controller.getTrendingViews(cont, category_name, country, n)
         if respuesta == None:
             print("No se encontraron videos")
         else:
             printViewsData(respuesta)
 
-    elif int(inputs[0]) == 5:
+    elif int(inputs[0]) == 4:
         country = input("Nombre del país: ")
         respuesta = controller.getTrendingCountry(cont, country)
         if respuesta == None:
             print("No se encontraron videos")
         else:
-            printCountryData(respuesta)
+            printCountryData(respuesta[0], respuesta[1], respuesta[2], respuesta[3])
 
-    elif int(inputs[0]) == 6:
+    elif int(inputs[0]) == 5:
         model.prueba(catalog)
 
     else:
