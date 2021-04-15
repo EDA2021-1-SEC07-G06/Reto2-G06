@@ -159,7 +159,6 @@ def addVideoCountry(catalog, video):
     Los paises se guardan en un Map, donde la llave es el pais
     y el valor la lista de videos de ese pais.
     """
-<<<<<<< HEAD
     countries = catalog['country_name']
     pubcountry = video["country"]
     existcountries = mp.contains(countries, pubcountry)
@@ -170,22 +169,6 @@ def addVideoCountry(catalog, video):
         country = newCountry(pubcountry)
         mp.put(countries, pubcountry, country)
     lt.addLast(country['videos'], video)
-=======
-    try:
-        countries = catalog['country_name']
-        pubcountry = video["country"]
-        existcountries = mp.contains(countries, pubcountry)
-        if existcountries:
-            entry = mp.get(countries, pubcountry)
-            country = me.getValue(entry)
-        else:
-            country = newCountry(pubcountry)
-            mp.put(countries, pubcountry, country)
-        lt.addLast(country['videos'], video)
-    
-    except Exception:
-        return None
->>>>>>> 818243f967a693c9e5823362c9ac6e46ab59c8da
 
 def newCountry(pubcountry):
     """
@@ -308,7 +291,7 @@ def getTrendingCountry (catalog, country):
     videos_pais = mp.get(catalog['country_name'], country)
     videos_pais = me.getValue(videos_pais)
     videos_pais = videos_pais["videos"]
-    lista_id = lt.newList('ARRAY_LIST')
+    #lista_id = lt.newList('ARRAY_LIST')
     lista_ids = lt.newList('ARRAY_LIST')
        
     if videos_pais == None:
@@ -318,33 +301,37 @@ def getTrendingCountry (catalog, country):
         #while it.hasNext(iterador):
             #video = it.next(iterador)
             #if video not in mapa_id:
+        #pos = 0
         for video in lt.iterator(videos_pais):
-            lt.addLast(lista_ids, video)
-            if video not in lista_id:
-                #mp.put(mapa_id, video["video_id"], 1)
-                lt.addLast(lista_id, video)
-            #else:
-                #resultado = mp.get(mapa_id, video["video_id"])
-                #mp.put(mapa_id, video["video_id"], (resultado[1]+ 1))
+            lt.addLast(lista_ids, video["video_id"])
+            #if int(lt.isPresent(lista_id, lista_ids[pos])) == 0:
+                #lt.addLast(lista_id, video)
+            #pos += 1
 
-    #recorrer la lista con un único id
-    mas_trending = 0
-    info_video = ""
-    cont = 0
-    iterador = it.newIterator(lista_id)
-    while it.hasNext(iterador):
-        video = it.next(iterador)
-        itera_idS = it.newIterator(lista_ids)
+        lista_ordenada = qs.sort(lista_ids, compareCategoryIds)
+
+            
+        #recorrer la lista con un único id
+        mas_trending = 0
+        info_id = " "
         cont = 0
-        while it.hasNext(itera_idS):
-            video2 = it.next(itera_idS)
-            if video["video_id"] == video2["video_id"]:
+        infovideo = " "
+        elemento = lt.firstElement(lista_ids)
+        for video in lt.iterator(lista_ids):
+            if elemento == video:
                 cont += 1
-        if cont > mas_trending:
-            mas_trending = cont
-            info_video = video
-
-    return (mas_trending, infovideo)
+            else:
+                if cont > mas_trending:
+                    mas_trending = cont
+                    info_id = elemento
+                    cont = 1
+            elemento = video
+        
+        for video in lt.iterator(videos_pais):
+            if info_id == video["video_id"]:
+                infovideo = video
+                
+        return (mas_trending, infovideo)
 
         
     
@@ -393,32 +380,6 @@ def getTagCountry(catalog,country, pTag, num):
     
     return listaFinal
 
-
-        
-
-"""
-    mas_trending = ""
-    dias_trending = 0
-    iterador = it.newIterator(videos_pais)
-    while it.hasNext(iterador):
-        video = it.next(iterador)
-        
-        #v = mp.get(mapa_id, video)
-        #v = me.getValue(v)
-        #v = v["videos"]
-
-        #if v[1] > dias_trending:
-            #dias_trending = v[1]
-            #mas_trending = v[0]
-
-    iterador = it.newIterator(mapa_id)
-    while it.hasNext(iterador):
-        video = it.next(iterador)
-        if video == mas_trending:
-            titulo = video["title"]
-            canal = video["cannel_title"]
-            return (titulo, canal, country, dias_trending)
-"""
 #  Funciones de comparación
 
 def cmpVideosByViews(video1, video2):
