@@ -308,8 +308,8 @@ def getTrendingCountry (catalog, country):
                 #lt.addLast(lista_id, video)
             #pos += 1
 
-        lista_ordenada = qs.sort(lista_ids, compareCategoryIds)
-
+        #lista_ordenada = qs.sort(lista_ids, compareCategoryIds)
+        lista_ordenada = qs.sort(lista_ids, compareVideosIds)
             
         #recorrer la lista con un único id
         mas_trending = 0
@@ -406,6 +406,7 @@ def compareCategoryIds(id, entry):
     """
     Compara dos ids de categorias. 
     """
+    print( id, type(entry), entry)
     identry = me.getKey(entry)
     if (int(id) == int(identry)):
         return 0
@@ -413,6 +414,20 @@ def compareCategoryIds(id, entry):
         return 1
     else:
         return -1
+
+
+def compareVideosIds(id, id2):
+    """
+    Compara dos ids de categorias. 
+    """
+    print( id, id2)
+    if id == id2:
+        return 0
+    elif id > id2:
+        return 1
+    else:
+        return -1
+
 
 def compareCategoryName(keyname, name):
     """
