@@ -41,10 +41,9 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar Catálogo")
     print("2- Cargar información en el catálogo")
-    print("3- Video con más trending para una categoría")
-    print("4- n videos con más views para un pais y categoria (req. 1)")
-    print("5- video más trending para un país (req. 2)")
-    print("6- n videos con mas likes dado una pais y tag ")
+    print("3- n videos con más views para un pais y categoria (req. 1)")
+    print("4- video más trending para un país (req. 2)")
+    print("5- n videos con mas likes dado una pais y tag ")
     print("0- Salir")
 
 
@@ -204,9 +203,7 @@ while True:
         else:
             printCountryData(respuesta[0], respuesta[1])
 
-    elif int(inputs[0]) == 6:
-
-       
+    elif int(inputs[0]) == 5:
         country = input('Ingrese el pais: ')
         tag = input('Ingrese el tag: ')
         num = input('Ingrese el numero de videos: ')
