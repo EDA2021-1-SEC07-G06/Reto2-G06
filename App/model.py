@@ -322,12 +322,13 @@ def prueba(catalog):
 
 
 # Funciones de ordenamiento
+
 def getTrendingViews(category_name, country, n):
     videos_pais = mp.get(catalog['country_name'], country)
     
     tamaño = mp.size(videos_pais)
     tamaño_map = size_mapa(tamaño)
-    mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+    mapa_views = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
     lista_views = lt.newList('ARRAY_LIST')
 
     if videos_pais == None:
@@ -338,7 +339,7 @@ def getTrendingViews(category_name, country, n):
                 mp.put(mapa_views, video["video_id"], video)
                 lt.addLast(lista_views, video["views"])
                     
-    lista_ordenada = ms.sort(lista_views, cmpVideosByViews)
+    lista_ordenada = qs.sort(lista_views, cmpVideosByViews)
     t_views = lt.size(lista_ordenada)
     
     if t_views <= n:
@@ -351,13 +352,17 @@ def getTrendingViews(category_name, country, n):
     return resultado 
 
 def getInfoVideos(lista1, map):
-#crear el mapa
-
+    #crear el nuevo mapa de respuestas
+    tamaño_map = size_mapa(tamaño)
+    resultado = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
+    
+    #buscar la info de los videos en el mapa, llenar el mapa y devolver un nuevo mapa
     for views in lista1:
-#mirar si los views todos son diferentes
-# si los views son iguales, si ya está el video agregar el siguiente video con igual views 
-#buscar la info de los videos en el mapa, llenar el mapa y devolver un nuevo mapa
-    return lista_final
+        for video in map:
+            if views == video["views"]:
+                mp.put(resultado, video["views"], video)
+    
+    return resultado
 
 
 def getTrendingCountry (catalog, country):
@@ -369,7 +374,7 @@ def getTrendingCountry (catalog, country):
     if videos_pais:
         tamaño = mp.size(videos_pais)
         tamaño_map = size_mapa(tamaño)
-        mapa_id = mp.newMap(tamaño_map, type= "CHAINING", loadfactor = 4)
+        mapa_id = mp.newMap(tamaño_map, type= "CHAINING", loadfactor = 2)
 
         for video in videos_pais:
             if video not in mapa_id:
@@ -414,6 +419,13 @@ def size_mapa (num):
     return size
 
 #  Funciones de comparación
+
+def cmpVideosByViews(video1, video2):
+    """ Devuelve verdadero (True) si los 'views' de video1 son mayores que los del video2 
+    Args: video1: informacion del primer video que incluye su valor 'views'
+          video2: informacion del segundo video que incluye su valor 'views' """
+    return (float(video1['views']) > float(video2['views']))
+
 
 def compareCategoryIds(id, entry):
     """
