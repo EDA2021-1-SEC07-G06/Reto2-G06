@@ -162,7 +162,6 @@ def addVideoCountry(catalog, video):
     Los paises se guardan en un Map, donde la llave es el pais
     y el valor la lista de videos de ese pais.
     """
-<<<<<<< HEAD
     countries = catalog['country_name']
     pubcountry = video["country"]
     existcountries = mp.contains(countries, pubcountry)
@@ -173,22 +172,6 @@ def addVideoCountry(catalog, video):
         country = newCountry(pubcountry)
         mp.put(countries, pubcountry, country)
     lt.addLast(country['videos'], video)
-=======
-    try:
-        countries = catalog['country_name']
-        pubcountry = video["country"]
-        existcountries = mp.contains(countries, pubcountry)
-        if existcountries:
-            entry = mp.get(countries, pubcountry)
-            country = me.getValue(entry)
-        else:
-            country = newCountry(pubcountry)
-            mp.put(countries, pubcountry, country)
-        lt.addLast(country['videos'], video)
-    
-    except Exception:
-        return None
->>>>>>> 818243f967a693c9e5823362c9ac6e46ab59c8da
 
 def existeCategoria(catalog, identificador):
 
