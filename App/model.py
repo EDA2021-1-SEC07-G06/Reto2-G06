@@ -159,6 +159,7 @@ def addVideoCountry(catalog, video):
     Los paises se guardan en un Map, donde la llave es el pais
     y el valor la lista de videos de ese pais.
     """
+<<<<<<< HEAD
     countries = catalog['country_name']
     pubcountry = video["country"]
     existcountries = mp.contains(countries, pubcountry)
@@ -169,6 +170,22 @@ def addVideoCountry(catalog, video):
         country = newCountry(pubcountry)
         mp.put(countries, pubcountry, country)
     lt.addLast(country['videos'], video)
+=======
+    try:
+        countries = catalog['country_name']
+        pubcountry = video["country"]
+        existcountries = mp.contains(countries, pubcountry)
+        if existcountries:
+            entry = mp.get(countries, pubcountry)
+            country = me.getValue(entry)
+        else:
+            country = newCountry(pubcountry)
+            mp.put(countries, pubcountry, country)
+        lt.addLast(country['videos'], video)
+    
+    except Exception:
+        return None
+>>>>>>> 818243f967a693c9e5823362c9ac6e46ab59c8da
 
 def newCountry(pubcountry):
     """
@@ -252,8 +269,6 @@ def getTrendingVideo(catalog, category_name):
             pos += 1
             tamaño -= 1
     
-
-
     else:
         print('No se encontro la categoria.')
         resultado = {None,'n',0}
@@ -261,10 +276,6 @@ def getTrendingVideo(catalog, category_name):
     resultado = masTrending, category_name.strip(), Mayor
     return resultado
         
-def prueba(catalog):
-    
-    cat = catalog['categoryName']
-    print(mp.size(cat))
 
 
 # Funciones de ordenamiento
@@ -338,6 +349,49 @@ def getTrendingCountry (catalog, country):
         
     
 
+def getTagCountry(catalog,country, pTag, num):
+    countrys = catalog['country_name']
+    existCountry  =  mp.contains(countrys,country)
+
+    lista = lt.newList('ARRAY_LIST')
+
+    if existCountry:
+        entry = mp.get(countrys, country)
+        valor = me.getValue(entry)
+        videos = valor['videos']
+        tamaño = lt.size(videos)
+        pos = 0
+        while tamaño > 0:
+            videoActual = lt.getElement(videos, pos)
+            tags = videoActual[tags].lower()
+            ltTags = tags.split('|')
+            tamTag = lt.size(ltTags)
+            
+            posTag = 0
+            while tamTag > 0:
+                tag = lt.getElement(ltTags,posTag)
+                if tag == pTag:
+                   lt.addLast(lista, videoActual)
+                   tamTag = 0
+                posTag += 1
+                tamTag -= 1
+
+            
+            posTag = 0
+            pos += 1
+            tamaño -= 1
+            
+    else:
+        print('El pais no esta registrado. ')
+    
+    if(lista == None):
+        print('No se encontraron videos con el tag dado.')
+    else:
+        listaOrdenada = sa.sort(lista, cmpVideosByLikes)
+        listaFinal = lt.subList(listaOrdenada,0,num)
+    
+    
+    return listaFinal
 
 
         
@@ -420,3 +474,9 @@ def compareCountries(country1, country2):
         return 1
     else:
         return 0
+
+def cmpVideosByLikes(video1, video2):
+    """ Devuelve verdadero (True) si los 'likes' de video1 son menores que los del video2 
+    Args: video1: informacion del primer video que incluye su valor 'likes'
+          video2: informacion del segundo video que incluye su valor 'likes' """
+    return (float(video1['likes']) < float(video2['likes']))
