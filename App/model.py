@@ -29,7 +29,9 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.DataStructures import mapstructure as ms
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import quicksort as qs
 assert cf
 
 """
@@ -88,11 +90,6 @@ def newCategory(id, name):
     categorys['name'] = name.strip()
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
-
-def newCountry(country):
-    countrys = {'country':'','videos': None }
-    countrys['country'] = country
-    countrys['videos'] = lt.newList('ARRAY_LIST')
 
 # Funciones para agregar informacion al catalogo
     
@@ -176,53 +173,15 @@ def addVideoCountry(catalog, video):
     except Exception:
         return None
 
-def getVideosByLikes(catalog, categoria, n):
-    list_videos_pais = []
-    dict = {}
-    lista_videos_likes = []
-
-    for video in lt.iterator(catalog["videos"]):
-        if video["category"] == categoria:
-            dict["id"] = video["video_id"]
-            dict["title"] = video["title"]
-            dict["cannel_title"] = video["channel_title"]
-            dict["publish_time"] = video["publish_time"]
-            dict["views"] = video["views"]
-            dict["likes"] = video["likes"]
-            dict["dislikes"] = video["dislikes"]
-            dict["tags"] = video["tags"]
-            dict["trending_date"] = video["trending_date"]
-            lista_videos_likes.append((video["likes"],video["video_id"]))
-            list_videos_pais.append(dict)
-            dict = {}
-    
-    lista_videos_likes.sort()
-
-    lista_id_elegido = []
-    lista_likes_elegido = []
-
-    pos = len(lista_videos_likes)- 1
-    x = len(lista_videos_likes) - n
-
-    if x > 0:
-        while pos >= x and x >= 0:
-            if lista_videos_likes[pos][1] not in lista_id_elegido:
-                lista_id_elegido.append(lista_videos_likes[pos][1])
-                lista_likes_elegido.append(lista_videos_likes[pos][0])
-            else:
-                x -= 1
-            pos -= 1
-            
-    else:
-        while pos >= 0:
-            if lista_videos_likes[pos][1] not in lista_id_elegido:
-                lista_id_elegido.append(lista_videos_likes[pos][1])
-                lista_likes_elegido.append(lista_videos_likes[pos][0])
-            pos -= 1
-
-    respuesta = getInfoVideos(list_videos_pais, lista_id_elegido, lista_likes_elegido)
-    return respuesta
-    
+def newCountry(pubcountry):
+    """
+    Esta funcion crea la estructura de videos asociados
+    a un país.
+    """
+    entry = {'country': "", "videos": None}
+    entry['country'] = pubcountry
+    entry['videos'] = lt.newList('SINGLE_LINKED', compareCountries)
+    return entry
 
 def getInfoVideos(lista1, lista2, lista3):
     lista_final = []
@@ -306,15 +265,48 @@ def getTrendingVideo(catalog, category_name):
 
 
 # Funciones de ordenamiento
-def getTrendingViews(category_name, country, n):
-    #recorrer el mapa y garantizar que se cumplan el país y categoría que se busca
+
+def getTrendingViews(catalog, category_name, country, n):
     videos_pais = mp.get(catalog['country_name'], country)
-    categorias = mp.get(catalog['categoryName'], category_name)
     
-    tamaño = mp.size(videos_pais)
+    tam = ms.size(videos_pais)
+    tamaño_map = size_mapa(tam)
+    mapa_views = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
+    lista_views = lt.newList('ARRAY_LIST')
+
+    if videos_pais == None:
+        return None
+    else:
+        for video in videos_pais:
+            if video["category"] == category_name:
+                mp.put(mapa_views, video["video_id"], video)
+                lt.addLast(lista_views, video["views"])
+                    
+    lista_ordenada = qs.sort(lista_views, cmpVideosByViews)
+    t_views = lt.size(lista_ordenada)
+    
+    if t_views <= n:
+        listafinal = lt.subList(lista_ordenada,0,t_views)
+    elif t_views > n:
+        listafinal = lt.subList(lista_ordenada,0,n)
+
+    resultado = getdatosVideos(listafinal, mapa_views)
+    
+    return resultado 
+
+def getdatosVideos(lista1, map):
+    #crear el nuevo mapa de respuestas
+    tamaño = mp.size(map)
     tamaño_map = size_mapa(tamaño)
-    mapa_views = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
-    pass
+    resultado = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
+    
+    #buscar la info de los videos en el mapa, llenar el mapa y devolver un nuevo mapa
+    for views in lista1:
+        for video in map:
+            if views == video["views"]:
+                mp.put(resultado, video["views"], video)
+    
+    return resultado
 
 def getTagCountry(catalog,country, pTag, num):
     countrys = catalog['country_name']
@@ -369,7 +361,7 @@ def getTrendingCountry (catalog, country):
     if videos_pais:
         tamaño = mp.size(videos_pais)
         tamaño_map = size_mapa(tamaño)
-        mapa_id = mp.newMap(tamaño_map, maptype= "PROBING", loadfactor = 0.5)
+        mapa_id = mp.newMap(tamaño_map, type= "CHAINING", loadfactor = 2)
 
         for video in videos_pais:
             if video not in mapa_id:
@@ -415,6 +407,13 @@ def size_mapa (num):
 
 #  Funciones de comparación
 
+def cmpVideosByViews(video1, video2):
+    """ Devuelve verdadero (True) si los 'views' de video1 son mayores que los del video2 
+    Args: video1: informacion del primer video que incluye su valor 'views'
+          video2: informacion del segundo video que incluye su valor 'views' """
+    return (float(video1['views']) > float(video2['views']))
+
+
 def compareCategoryIds(id, entry):
     """
     Compara dos ids de categorias. 
@@ -454,9 +453,16 @@ def compareCountryNames(name, country):
     else:
         return -1
 
+def compareCountries(country1, country2):
+    if country1 == country2:
+        return 0
+    elif country1 > country2:
+        return 1
+    else:
+        return 0
+
 def cmpVideosByLikes(video1, video2):
     """ Devuelve verdadero (True) si los 'likes' de video1 son menores que los del video2 
     Args: video1: informacion del primer video que incluye su valor 'likes'
           video2: informacion del segundo video que incluye su valor 'likes' """
     return (float(video1['likes']) < float(video2['likes']))
-

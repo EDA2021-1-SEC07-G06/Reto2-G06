@@ -88,14 +88,6 @@ def loadCategory(catalog):
 
 # Funciones de consulta sobre el catálogo
 
-def getVideosByLikes(catalog, categoria, n):
-    """
-    Retorna los videos con más likes
-    """
-    likes = model.getVideosByLikes(catalog, categoria, n)
-    return likes
-
-
 def videosSize(catalog):
     """
     Numero de videos cargados al catalogo
@@ -109,11 +101,11 @@ def categorySize(catalog):
     """
     return model.categorySize(catalog)
 
-def getTrendingViews(category_name, country, n):
+def getTrendingViews(catalog, category_name, country, n):
     """
     Retorna los n videos con más views para un país y categoría
     """
-    views = model.getTrendingViews(category_name, country, n)
+    views = model.getTrendingViews(catalog, category_name, country, n)
     return views
 
 
