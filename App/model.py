@@ -29,6 +29,7 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.DataStructures import mapstructure as ms
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import quicksort as qs
 assert cf
@@ -273,7 +274,7 @@ def prueba(catalog):
 def getTrendingViews(catalog, category_name, country, n):
     videos_pais = mp.get(catalog['country_name'], country)
     
-    tam = mp.size(videos_pais)
+    tam = ms.size(videos_pais)
     tamaño_map = size_mapa(tam)
     mapa_views = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
     lista_views = lt.newList('ARRAY_LIST')
