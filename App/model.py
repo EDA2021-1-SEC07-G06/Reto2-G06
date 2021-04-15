@@ -273,8 +273,8 @@ def prueba(catalog):
 def getTrendingViews(catalog, category_name, country, n):
     videos_pais = mp.get(catalog['country_name'], country)
     
-    tamaño = mp.size(videos_pais)
-    tamaño_map = size_mapa(tamaño)
+    tam = mp.size(videos_pais)
+    tamaño_map = size_mapa(tam)
     mapa_views = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
     lista_views = lt.newList('ARRAY_LIST')
 

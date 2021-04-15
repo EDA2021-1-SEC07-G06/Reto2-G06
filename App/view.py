@@ -130,8 +130,8 @@ while True:
 
     elif int(inputs[0]) == 3:
         country = input("Nombre del país: ")
-        category_name = input("Categoría")
-        n = input("Cantidad de videos")
+        category_name = input("Categoría: ")
+        n = input("Cantidad de videos: ")
         respuesta = controller.getTrendingViews(cont, category_name, country, n)
         if respuesta == None:
             print("No se encontraron videos")
