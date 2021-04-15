@@ -83,7 +83,7 @@ def printViewsData(mapa):
     print("\n Estos son los mejores videos: \n")
     for video in mapa :
         print( 'Fecha de tendencia: ' + mapa[video]['trending_date'] + 
-                ' \nTitulo: ' + mapa[video]['title'] + ' \nCanal: ' + mapa[video]['cannel_title'] +
+                ' \nTitulo: ' + mapa[video]['title'] + ' \nCanal: ' + mapa[video]['channel_title'] +
                 ' \nTiempo de publicación: ' + mapa[video]['publish_time'] +
                 ' \nVistas: ' + mapa[video]['views'] + ' \nLikes: ' + mapa[video]['likes'] + 
                 ' \nDislikes: ' + mapa[video]['dislikes'] + "\n")
@@ -99,6 +99,24 @@ def printVideoData(video,catego, dias_trending):
     print('Categoria: '+ str(catego))
     print('Numero de dias: '+ str(int(dias_trending)))
 
+def printVideoDataNumLikes(lista):
+    if lista == None:
+        print('No se encontraron videos con el tag descrito. ')
+    else: 
+        tamañoLista = lt.size(lista)
+        pos = 0
+        while tamañoLista > 0:
+            n = lt.getElement(lista,pos)
+            print('Titulo: ' + n['title'] + '\nCanal: ' + n['channel_title']
+            + '\nFecha de Publicación: ' + n['publish_time'] + 
+            '\nViews: ' + n['views'] + '\nLikes: ' + n['likes'] 
+            + '\nDislikes: ' + n['dislikes'] + '\nTags: ' + n['tags'])
+            tamañoLista -= 1
+            pos += 1
+
+
+            
+    
 """
 Menu principal
 """ 
@@ -151,7 +169,7 @@ while True:
         tag = input('Ingrese el tag: ')
         num = input('Ingrese el numero de videos: ')
         respuesta = controller.getTagCountry(catalog, country, tag, num)
-        None
+        printVideoDataNumLikes(respuesta)
 
     else:
         sys.exit(0)
