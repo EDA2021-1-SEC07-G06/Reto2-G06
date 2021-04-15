@@ -32,6 +32,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.DataStructures import mapstructure as ms
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import quicksort as qs
+from DISClib.DataStructures import listiterator as it
 assert cf
 
 """
@@ -158,19 +159,16 @@ def addVideoCountry(catalog, video):
     Los paises se guardan en un Map, donde la llave es el pais
     y el valor la lista de videos de ese pais.
     """
-    try:
-        countries = catalog['country_name']
-        pubcountry = video["country"]
-        existcountries = mp.contains(countries, pubcountry)
-        if existcountries:
-            entry = mp.get(countries, pubcountry)
-            country = me.getValue(entry)
-        else:
-            country = newCountry(pubcountry)
-            mp.put(countries, pubcountry, country)
-        lt.addLast(country['video'], video)
-    except Exception:
-        return None
+    countries = catalog['country_name']
+    pubcountry = video["country"]
+    existcountries = mp.contains(countries, pubcountry)
+    if existcountries:
+        entry = mp.get(countries, pubcountry)
+        country = me.getValue(entry)
+    else:
+        country = newCountry(pubcountry)
+        mp.put(countries, pubcountry, country)
+    lt.addLast(country['videos'], video)
 
 def newCountry(pubcountry):
     """
@@ -273,19 +271,18 @@ def prueba(catalog):
 
 def getTrendingViews(catalog, category_name, country, n):
     videos_pais = mp.get(catalog['country_name'], country)
-    
-    tam = ms.size(videos_pais)
-    tamaño_map = size_mapa(tam)
-    mapa_views = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
+    videos_pais = me.getValue(videos_pais)
+    videos_pais = videos_pais["videos"]
     lista_views = lt.newList('ARRAY_LIST')
 
     if videos_pais == None:
         return None
     else:
-        for video in videos_pais:
-            if video["category"] == category_name:
-                mp.put(mapa_views, video["video_id"], video)
-                lt.addLast(lista_views, video["views"])
+        iterador = it.newIterator(videos_pais)
+        while it.hasNext(iterador):
+            video = it.next(iterador)
+            if int(video["category_id"]) == category_name:
+                lt.addLast(lista_views, video)
                     
     lista_ordenada = qs.sort(lista_views, cmpVideosByViews)
     t_views = lt.size(lista_ordenada)
@@ -294,79 +291,80 @@ def getTrendingViews(catalog, category_name, country, n):
         listafinal = lt.subList(lista_ordenada,0,t_views)
     elif t_views > n:
         listafinal = lt.subList(lista_ordenada,0,n)
-
-    resultado = getdatosVideos(listafinal, mapa_views)
-    
-    return resultado 
-
-def getdatosVideos(lista1, map):
-    #crear el nuevo mapa de respuestas
-    tamaño = mp.size(map)
-    tamaño_map = size_mapa(tamaño)
-    resultado = mp.newMap(tamaño_map, maptype= "CHAINING", loadfactor = 2)
-    
-    #buscar la info de los videos en el mapa, llenar el mapa y devolver un nuevo mapa
-    for views in lista1:
-        for video in map:
-            if views == video["views"]:
-                mp.put(resultado, video["views"], video)
-    
-    return resultado
-
+    return listafinal
 
 def getTrendingCountry (catalog, country):
-    #print("En getTrendingCountry "+country)
     videos_pais = mp.get(catalog['country_name'], country)
-    #print(catalog)
-    print("videos del pais")
-    print(videos_pais)
-    if videos_pais:
-        tamaño = mp.size(videos_pais)
-        tamaño_map = size_mapa(tamaño)
-        mapa_id = mp.newMap(tamaño_map, type= "CHAINING", loadfactor = 2)
-
-        for video in videos_pais:
-            if video not in mapa_id:
-                mp.put(mapa_id, video["video_id"], 1)
-            else:
-                resultado = mp.get(mapa_id, video["video_id"])
-                mp.put(mapa_id, video["video_id"], (resultado[1]+ 1))
-    else: 
+    videos_pais = me.getValue(videos_pais)
+    videos_pais = videos_pais["videos"]
+    lista_id = lt.newList('ARRAY_LIST')
+    lista_ids = lt.newList('ARRAY_LIST')
+       
+    if videos_pais == None:
         return None
+    else:
+        #iterador = it.newIterator(videos_pais)
+        #while it.hasNext(iterador):
+            #video = it.next(iterador)
+            #if video not in mapa_id:
+        for video in lt.iterator(videos_pais):
+            lt.addLast(lista_ids, video)
+            if video not in lista_id:
+                #mp.put(mapa_id, video["video_id"], 1)
+                lt.addLast(lista_id, video)
+            #else:
+                #resultado = mp.get(mapa_id, video["video_id"])
+                #mp.put(mapa_id, video["video_id"], (resultado[1]+ 1))
 
-    print("Tamanno "+ str(tamaño))
+    #recorrer la lista con un único id
+    mas_trending = 0
+    info_video = ""
+    cont = 0
+    iterador = it.newIterator(lista_id)
+    while it.hasNext(iterador):
+        video = it.next(iterador)
+        itera_idS = it.newIterator(lista_ids)
+        cont = 0
+        while it.hasNext(itera_idS):
+            video2 = it.next(itera_idS)
+            if video["video_id"] == video2["video_id"]:
+                cont += 1
+        if cont > mas_trending:
+            mas_trending = cont
+            info_video = video
+
+    return (mas_trending, infovideo)
+
+        
+    
+
+
+
+        
+
+"""
     mas_trending = ""
     dias_trending = 0
-    for video in mapa_id:
-        v = mp.get(mapa_id, video)
-        if v[1] > dias_trending:
-            dias_trending = v[1]
-            mas_trending = v[0]
+    iterador = it.newIterator(videos_pais)
+    while it.hasNext(iterador):
+        video = it.next(iterador)
+        
+        #v = mp.get(mapa_id, video)
+        #v = me.getValue(v)
+        #v = v["videos"]
 
-    for video in mapa_id:
+        #if v[1] > dias_trending:
+            #dias_trending = v[1]
+            #mas_trending = v[0]
+
+    iterador = it.newIterator(mapa_id)
+    while it.hasNext(iterador):
+        video = it.next(iterador)
         if video == mas_trending:
             titulo = video["title"]
             canal = video["cannel_title"]
             return (titulo, canal, country, dias_trending)
-
-def es_primo (num):
-    resultado = True
-    for n in range(2,num):
-        if num % n == 0:
-            resultado = False
-    return resultado
-
-def size_mapa (num):
-    size = (num*2) + 1
-    terminar = 1
-
-    while terminar > 0:
-        if es_primo(size) == True:
-            terminar = 0
-        else:
-            size += 1
-    return size
-
+"""
 #  Funciones de comparación
 
 def cmpVideosByViews(video1, video2):

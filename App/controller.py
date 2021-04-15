@@ -72,7 +72,7 @@ def loadVideos(catalog):
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
-
+        model.addVideoCountry(catalog, video)
 
 def loadCategory(catalog):
     """

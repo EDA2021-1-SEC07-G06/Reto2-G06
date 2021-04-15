@@ -25,6 +25,7 @@ import sys
 import controller
 import model
 from DISClib.ADT import list as lt
+from DISClib.DataStructures import listiterator as it
 assert cf
 
 
@@ -72,21 +73,25 @@ def printLikesData(videos):
         print('No se encontraron videos')
 
 
-def printCountryData(titulo, canal, country, dias_trending):
-    print('Video encontrado: ' + titulo)
-    print('Canal: ' + canal)
-    print('País: ' + country)
-    print('Número de días:' + str(dias_trending))
+def printCountryData(dias_trending, info_video):
+    print("\n Este es el mejor video: \n")
+    print('Número de días trending:' + str(dias_trending))
+    print('Video: ' + info_video["title"])
+    print('Canal: ' + info_video["channel_title"])
+    print('País: ' + info_video["country"])
+    
 
     
-def printViewsData(mapa):
+def printViewsData(lista):
     print("\n Estos son los mejores videos: \n")
-    for video in mapa :
-        print( 'Fecha de tendencia: ' + mapa[video]['trending_date'] + 
-                ' \nTitulo: ' + mapa[video]['title'] + ' \nCanal: ' + mapa[video]['cannel_title'] +
-                ' \nTiempo de publicación: ' + mapa[video]['publish_time'] +
-                ' \nVistas: ' + mapa[video]['views'] + ' \nLikes: ' + mapa[video]['likes'] + 
-                ' \nDislikes: ' + mapa[video]['dislikes'] + "\n")
+    iterador = it.newIterator(lista)
+    while it.hasNext(iterador):
+        mapa = it.next(iterador)
+        print( 'Fecha de tendencia: ' + mapa['trending_date'] + 
+                ' \nTitulo: ' + mapa['title'] + ' \nCanal: ' + mapa['channel_title'] +
+                ' \nTiempo de publicación: ' + mapa['publish_time'] +
+                ' \nVistas: ' + mapa['views'] + ' \nLikes: ' + mapa['likes'] + 
+                ' \nDislikes: ' + mapa['dislikes'] + "\n")
 
 def printVideoData(video,catego, dias_trending):
     if video == None:
@@ -130,11 +135,12 @@ while True:
 
     elif int(inputs[0]) == 3:
         country = input("Nombre del país: ")
-        category_name = input("Categoría: ")
-        n = input("Cantidad de videos: ")
+        category_name = int(input("Categoría: "))
+        n = int(input("Cantidad de videos: "))
         respuesta = controller.getTrendingViews(cont, category_name, country, n)
         if respuesta == None:
             print("No se encontraron videos")
+        #print(respuesta)
         else:
             printViewsData(respuesta)
 
@@ -144,7 +150,7 @@ while True:
         if respuesta == None:
             print("No se encontraron videos")
         else:
-            printCountryData(respuesta[0], respuesta[1], respuesta[2], respuesta[3])
+            printCountryData(respuesta[0], respuesta[1])
 
     elif int(inputs[0]) == 5:
         model.prueba(catalog)
