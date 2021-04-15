@@ -171,7 +171,8 @@ def addVideoCountry(catalog, video):
         else:
             country = newCountry(pubcountry)
             mp.put(countries, pubcountry, country)
-        lt.addLast(country['video'], video)
+        lt.addLast(country['videos'], video)
+    
     except Exception:
         return None
 
@@ -346,11 +347,18 @@ def getTagCountry(catalog,country, pTag, num):
             posTag = 0
             pos += 1
             tamaño -= 1
-
-
+            
     else:
         print('El pais no esta registrado. ')
-    None 
+    
+    if(lista == None):
+        print('No se encontraron videos con el tag dado.')
+    else:
+        listaOrdenada = sa.sort(lista, cmpVideosByLikes)
+        listaFinal = lt.subList(listaOrdenada,0,num)
+    
+    
+    return listaFinal
 
 def getTrendingCountry (catalog, country):
     #print("En getTrendingCountry "+country)
@@ -445,4 +453,10 @@ def compareCountryNames(name, country):
         return 1
     else:
         return -1
+
+def cmpVideosByLikes(video1, video2):
+    """ Devuelve verdadero (True) si los 'likes' de video1 son menores que los del video2 
+    Args: video1: informacion del primer video que incluye su valor 'likes'
+          video2: informacion del segundo video que incluye su valor 'likes' """
+    return (float(video1['likes']) < float(video2['likes']))
 
