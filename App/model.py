@@ -324,7 +324,7 @@ def getTrendingCountry (catalog, country):
                 if cont > mas_trending:
                     mas_trending = cont
                     info_id = elemento
-                    cont = 1
+                cont = 1
             elemento = video
         
         for video in lt.iterator(videos_pais):
