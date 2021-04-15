@@ -92,6 +92,16 @@ def newCategory(id, name):
     categorys['videos'] = lt.newList('ARRAY_LIST')
     return categorys
 
+def newCountry(pubcountry):
+    """
+    Esta funcion crea la estructura de videos asociados
+    a un país.
+    """
+    entry = {'country': "", "videos": None}
+    entry['country'] = pubcountry
+    entry['videos'] = lt.newList('SINGLE_LINKED', compareCountries)
+    return entry
+
 # Funciones para agregar informacion al catalogo
     
 def addVideo(catalog, video):
@@ -145,13 +155,6 @@ def addCategory(catalog, category):
     mp.put(catalog['categoryId'], int(category['id']), nuevaCategoria)
     mp.put(catalog['categoryName'], category['name'].strip(), nuevaCategoria)
 
-def existeCategoria(catalog, identificador):
-
-    categorys = catalog['categorys']
-    categoryTosearch = newCategory(identificador, '')
-    posCategory = lt.isPresent(categorys, categoryTosearch)
-    return posCategory
-
     
 def addVideoCountry(catalog, video):
     """
@@ -170,15 +173,12 @@ def addVideoCountry(catalog, video):
         mp.put(countries, pubcountry, country)
     lt.addLast(country['videos'], video)
 
-def newCountry(pubcountry):
-    """
-    Esta funcion crea la estructura de videos asociados
-    a un país.
-    """
-    entry = {'country': "", "videos": None}
-    entry['country'] = pubcountry
-    entry['videos'] = lt.newList('SINGLE_LINKED', compareCountries)
-    return entry
+def existeCategoria(catalog, identificador):
+
+    categorys = catalog['categorys']
+    categoryTosearch = newCategory(identificador, '')
+    posCategory = lt.isPresent(categorys, categoryTosearch)
+    return posCategory
 
 def getInfoVideos(lista1, lista2, lista3):
     lista_final = []
@@ -338,25 +338,33 @@ def getTrendingCountry (catalog, country):
 
 def getTagCountry(catalog,country, pTag, num):
     countrys = catalog['country_name']
-    existCountry  =  mp.contains(countrys,country)
-
+    existCountry  =  mp.contains(countrys,country.lower())
+  
     lista = lt.newList('ARRAY_LIST')
 
     if existCountry:
-        entry = mp.get(countrys, country)
+
+        entry = mp.get(countrys, country.lower())
         valor = me.getValue(entry)
+
         videos = valor['videos']
         tamaño = lt.size(videos)
         pos = 0
         while tamaño > 0:
             videoActual = lt.getElement(videos, pos)
-            tags = videoActual[tags].lower()
-            ltTags = tags.split('|')
-            tamTag = lt.size(ltTags)
-            
+            tags = videoActual['tags'].lower()
+            tags1 = tags.replace('"','')
+            tags2 = tags1.replace('"','')     
+            ltTags = tags2.split('|')
+
+            tamTag = 0
+
+            for t in ltTags:
+               tamTag += 1
+
             posTag = 0
             while tamTag > 0:
-                tag = lt.getElement(ltTags,posTag)
+                tag = ltTags[posTag]
                 if tag == pTag:
                    lt.addLast(lista, videoActual)
                    tamTag = 0
@@ -374,8 +382,13 @@ def getTagCountry(catalog,country, pTag, num):
     if(lista == None):
         print('No se encontraron videos con el tag dado.')
     else:
-        listaOrdenada = sa.sort(lista, cmpVideosByLikes)
-        listaFinal = lt.subList(listaOrdenada,0,num)
+        if(int(num) > lt.size(lista)):
+            listaOrdenada = sa.sort(lista, cmpVideosByLikes)
+            listaFinal = listaOrdenada
+        else:
+            
+            listaOrdenada = sa.sort(lista, cmpVideosByLikes)
+            listaFinal = lt.subList(listaOrdenada,0,int(num))
     
     
     return listaFinal
@@ -440,4 +453,4 @@ def cmpVideosByLikes(video1, video2):
     """ Devuelve verdadero (True) si los 'likes' de video1 son menores que los del video2 
     Args: video1: informacion del primer video que incluye su valor 'likes'
           video2: informacion del segundo video que incluye su valor 'likes' """
-    return (float(video1['likes']) < float(video2['likes']))
+    return (float(video1['likes']) > float(video2['likes']))

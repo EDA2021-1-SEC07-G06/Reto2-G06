@@ -103,6 +103,24 @@ def printVideoData(video,catego, dias_trending):
     print('Categoria: '+ str(catego))
     print('Numero de dias: '+ str(int(dias_trending)))
 
+def printVideoDataNumLikes(lista):
+    if lista == None:
+        print('No se encontraron videos con el tag descrito. ')
+    else: 
+        tamañoLista = lt.size(lista)
+        pos = 0
+        while tamañoLista > 0:
+            n = lt.getElement(lista,pos)
+            print('Titulo: ' + n['title'] + '\nCanal: ' + n['channel_title']
+            + '\nFecha de Publicación: ' + n['publish_time'] + 
+            '\nViews: ' + n['views'] + '\nLikes: ' + n['likes'] 
+            + '\nDislikes: ' + n['dislikes'] + '\nTags: ' + n['tags'])
+            tamañoLista -= 1
+            pos += 1
+
+
+            
+    
 """
 Menu principal
 """ 
@@ -114,7 +132,7 @@ while True:
         print("Inicializando Catálogo ....")
         predeterminado = input("¿Quiere usar el método y factor predeterminado? (si/no) ")
         if predeterminado == "si":
-            metodo = 'CHAINING'
+            metodo = 'PROBING'
             factor = int("4")
         elif predeterminado == "no":
             metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
@@ -156,7 +174,7 @@ while True:
         tag = input('Ingrese el tag: ')
         num = input('Ingrese el numero de videos: ')
         respuesta = controller.getTagCountry(catalog, country, tag, num)
-        None
+        printVideoDataNumLikes(respuesta)
 
     else:
         sys.exit(0)
