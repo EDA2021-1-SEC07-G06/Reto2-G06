@@ -162,7 +162,7 @@ while True:
         print("Inicializando Catálogo ....")
         predeterminado = input("¿Quiere usar el método y factor predeterminado? (si/no) ")
         if predeterminado == "si":
-            metodo = 'PROBING'
+            metodo = 'CHAINING'
             factor = int("4")
         elif predeterminado == "no":
             metodo = input("Ingrese el mecanismo de colisiones a utilizar (CHAINING/PROBING): ")
